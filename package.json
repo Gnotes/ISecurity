@@ -2,6 +2,7 @@
   "name": "i-security",
   "version": "0.1.0",
   "private": true,
+  "main": "main.js",
   "dependencies": {
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
@@ -11,7 +12,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "electron-dev": "concurrently \"cross-env BROWSER=none yarn start\" \"wait-on http://localhost:3000 && cross-env NODE_ENV=development electron .\""
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -21,5 +23,14 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "concurrently": "^4.0.1",
+    "cross-env": "^5.2.0",
+    "devtron": "^1.4.0",
+    "electron": "^3.0.4",
+    "electron-debug": "^2.0.0",
+    "electron-devtools-installer": "^2.2.4",
+    "wait-on": "^3.1.0"
+  }
 }
