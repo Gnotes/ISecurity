@@ -7,6 +7,10 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import Switch from '@material-ui/core/Switch';
 import './index.scss';
 
+const { remote } = window.require('electron');
+const { BrowserWindow } = remote;
+let win = null;
+
 class Login extends Component {
 
   constructor(props) {
@@ -28,6 +32,26 @@ class Login extends Component {
   handleLogin = (event) => {
     event.preventDefault();
   };
+
+  onClickPrivacy = () => {
+    if (!win) {
+      win = new BrowserWindow({ width: 800, height: 600, show: false, resizable: false, maximizable: false, minimizable: false, title: 'iSecurity' })
+      //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
+      win.once('ready-to-show', () => {
+        win.show()
+      })
+      // 在渲染完成后添加事件监听
+      win.webContents.once('did-finish-load', () => {
+        // 窗口关闭时回收窗口
+        win.once('close', (e) => {
+          win.destroy();
+          win = null;
+        })
+      })
+    }
+    // 然后加载应用的远程资源URL。
+    win.loadURL('http://localhost:3000/privacy');
+  }
 
   render() {
     return (
@@ -80,7 +104,7 @@ class Login extends Component {
               </div>
             </form>
             <div className="privacy-agreement">
-              <p>Read the <a href="/">《Privacy agreement》</a></p>
+              <p>Read the <span onClick={this.onClickPrivacy}>《Privacy agreement》</span></p>
             </div>
           </div>
         </div>

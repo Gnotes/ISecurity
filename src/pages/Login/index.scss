@@ -62,9 +62,12 @@
       letter-spacing: 0.37px;
       text-align: center;
 
-      a {
-        text-decoration: none;
-        color: #3a89e2
+      span {
+        color: #3a89e2;
+        &:hover {
+          cursor: pointer;
+          color: #1173e2;
+        }
       }
     }
   }
