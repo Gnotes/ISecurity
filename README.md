@@ -18,4 +18,4 @@ yarn dev
 # npm run dev 
 ```
 
-<img alt="iSecurity" src="./app.png" />
+<img alt="iSecurity" src="./app.png" width="300"/>
