@@ -1,0 +1,71 @@
+.login {
+  &-logo{
+    padding: 20px 0;
+    background-color: #FFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .avatar-text {
+      width: 60px;
+      height: 60px;
+    }
+  }
+  &-bottom {
+    background-color: #F4F5F7;
+    .logan {
+      padding: 20px 0;
+      font-size: 12px;
+      color: #8898AA;
+      letter-spacing: 0.37px;
+      text-align: center;
+    }
+    .login-form {
+      margin: 0 25px;
+      
+      .login-input {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+      }
+      .is-input {
+        padding: 8px 10px;
+        border-radius: 3px;
+        background-color: #FFF;
+        button span {
+          color: rgba(110, 70, 255, 0.54);
+        }
+      }
+
+      .switch {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .is-switch {
+          margin-left: -14px;
+        }
+        .is-switch-checked {
+          color: rgba(110, 70, 255, 0.54);
+        }
+        .remember-text {
+          font-size: 12px;
+          color: #8898AA;
+          letter-spacing: 0.37px;
+        }
+
+      }
+    }
+    .privacy-agreement {
+      font-size: 12px;
+      color: #8898AA;
+      letter-spacing: 0.37px;
+      text-align: center;
+
+      a {
+        text-decoration: none;
+        color: #3a89e2
+      }
+    }
+  }
+}

@@ -14,6 +14,8 @@ yarn install
 #### 2. Run command
 
 ```bash
-yarn electron-dev
-# npm run electron-dev 
+yarn dev
+# npm run dev 
 ```
+
+<img alt="iSecurity" src="./app.png" />

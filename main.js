@@ -11,9 +11,13 @@ async function createWindow() {
   if (process.env.NODE_ENV === 'development') {
     await installExtensions();
   }
-
   // 创建浏览器窗口。
-  win = new BrowserWindow({ width: 800, height: 600 })
+  win = new BrowserWindow({ width: 300, height: 370, show: false, resizable: false, maximizable: false, title: 'iSecurity' })
+
+  //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
+  win.once('ready-to-show', () => {
+    win.show()
+  })
 
   // 然后加载应用的远程资源URL。
   win.loadURL('http://localhost:3000');
