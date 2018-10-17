@@ -31,6 +31,18 @@ class Login extends Component {
 
   handleLogin = (event) => {
     event.preventDefault();
+    const { password } = this.state;
+    if (!password || password.trim() === '') {
+      /**
+       * 使用 HTML-API Notification 模块
+       * https://w3c-html-ig-zh.github.io/notifications/whatwg/
+       */
+      new Notification('Warm Tips', {
+        body: 'Please enter a valid password.',
+        silent: false
+      })
+      return;
+    }
   };
 
   onClickPrivacy = () => {

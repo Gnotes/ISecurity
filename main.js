@@ -1,4 +1,5 @@
 const { app, BrowserWindow } = require('electron')
+const Notify = require('./src/tools/notify');
 
 // 添加调试开发工具
 require('electron-debug')();
@@ -16,7 +17,12 @@ async function createWindow() {
 
   //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
   win.once('ready-to-show', () => {
-    win.show()
+    win.show();
+    Notify.message({
+      title: 'Welcome to iSecurity',
+      body: 'Thanks for choosing me.',
+      silent: false,
+    })
   })
 
   // 然后加载应用的远程资源URL。
