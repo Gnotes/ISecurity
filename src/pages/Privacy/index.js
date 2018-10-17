@@ -7,7 +7,7 @@ export default class Privacy extends PureComponent {
   render() {
     return (
       <div className="privacy">
-        <div class="privacy-hader">
+        <div className="privacy-header">
           <Avatar className="avatar-text">S</Avatar>
           <span>The Privacy Agreement</span>
         </div>
