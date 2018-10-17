@@ -12,7 +12,7 @@ const { remote, ipcRenderer } = window.require('electron');
 const nedb = require('../../tools/nedb');
 
 const { BrowserWindow } = remote;
-let win = null;
+let win = null, mainWindow = null;
 const USER_ID = 'i_security';
 
 class Login extends Component {
@@ -90,7 +90,26 @@ class Login extends Component {
   }
 
   showMainWindow = () => {
-    this.setState({ loading: true })
+    this.setState({ loading: true });
+    if (!mainWindow) {
+      mainWindow = new BrowserWindow({ width: 800, height: 600, show: false, resizable: false, maximizable: false, minimizable: false, title: 'iSecurity' })
+      //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
+      mainWindow.once('ready-to-show', () => {
+        mainWindow.show();
+        this.setState({ loading: false }, this.hideLoginWindow);
+      })
+      // 在渲染完成后添加事件监听
+      mainWindow.webContents.once('did-finish-load', () => {
+        // 窗口关闭时回收窗口
+        mainWindow.once('close', (e) => {
+          mainWindow.destroy();
+          mainWindow = null;
+          this.showLoginWindow();
+        })
+      })
+    }
+    // 然后加载应用的远程资源URL。
+    mainWindow.loadURL('http://localhost:3000/main');
   }
 
   handleLogin = async (event) => {
@@ -138,6 +157,14 @@ class Login extends Component {
 
   onClickMinWindow = () => {
     ipcRenderer.send('asynchronous-message', 'minimize-login-window');
+  }
+
+  hideLoginWindow = () => {
+    ipcRenderer.send('asynchronous-message', 'hide-login-window');
+  }
+
+  showLoginWindow = () => {
+    ipcRenderer.send('asynchronous-message', 'show-login-window');
   }
 
   render() {

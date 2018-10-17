@@ -81,6 +81,8 @@ ipcMain.on('asynchronous-message', (e, args) => {
   switch (args) {
     case 'close-login-window': win.close(); break;
     case 'minimize-login-window': win.minimize(); break;
+    case 'hide-login-window': win.hide(); break;
+    case 'show-login-window': win.show(); break;
     default: break;
   }
 })
