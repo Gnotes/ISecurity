@@ -7,13 +7,44 @@
   }
 }
 .login {
+  .close-button {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    svg {
+      fill:#BDBDBD;
+    }
+    &:hover{
+      cursor: pointer;
+      svg {
+        fill:#FA6261;
+      }
+    }
+  }
+  .minus-button {
+    position: absolute;
+    top: 5px;
+    left: 25px;
+    svg {
+      fill:#BDBDBD;
+    }
+    &:hover{
+      cursor: pointer;
+      svg {
+        fill:#FA6261;
+      }
+    }
+  }
   &-logo{
     padding: 20px 0;
     background-color: #FFF;
     display: flex;
     justify-content: center;
     align-items: center;
-
+    -webkit-app-region: drag;
+    &:hover{
+      cursor: pointer;
+    }
     .avatar-text {
       width: 60px;
       height: 60px;

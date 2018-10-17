@@ -1,5 +1,5 @@
 require('./tools/nedb');
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron')
 const Notify = require('./tools/notify');
 
 // 添加调试开发工具
@@ -14,7 +14,7 @@ async function createWindow() {
     await installExtensions();
   }
   // 创建浏览器窗口。
-  win = new BrowserWindow({ width: 300, height: 370, show: false, resizable: false, maximizable: false, title: 'iSecurity' })
+  win = new BrowserWindow({ width: 300, height: 400, show: false, frame: false, resizable: false, maximizable: false, title: 'iSecurity' })
 
   //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
   win.once('ready-to-show', () => {
@@ -75,3 +75,12 @@ app.on('activate', () => {
 
 // 在这个文件中，你可以续写应用剩下主进程代码。
 // 也可以拆分成几个文件，然后用 require 导入。
+
+ipcMain.on('asynchronous-message', (e, args) => {
+  if (!win) return;
+  switch (args) {
+    case 'close-login-window': win.close(); break;
+    case 'minimize-login-window': win.minimize(); break;
+    default: break;
+  }
+})
