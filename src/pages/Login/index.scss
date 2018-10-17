@@ -1,3 +1,11 @@
+@keyframes spin {
+  from {
+      transform: rotate(0deg);
+  }
+  to {
+      transform: rotate(360deg);
+  }
+}
 .login {
   &-logo{
     padding: 20px 0;
@@ -34,6 +42,9 @@
         background-color: #FFF;
         button span {
           color: rgba(110, 70, 255, 0.54);
+        }
+        .refresh-loading {
+          animation: spin 1s linear infinite;
         }
       }
 

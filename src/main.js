@@ -1,5 +1,6 @@
+require('./tools/nedb');
 const { app, BrowserWindow } = require('electron')
-const Notify = require('./src/tools/notify');
+const Notify = require('./tools/notify');
 
 // 添加调试开发工具
 require('electron-debug')();
@@ -22,7 +23,7 @@ async function createWindow() {
       title: 'Welcome to iSecurity',
       body: 'Thanks for choosing me.',
       silent: false,
-    })
+    });
   })
 
   // 然后加载应用的远程资源URL。

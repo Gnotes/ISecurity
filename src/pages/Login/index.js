@@ -4,21 +4,70 @@ import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import ArrowForward from '@material-ui/icons/ArrowForward';
+import Refresh from '@material-ui/icons/Refresh';
 import Switch from '@material-ui/core/Switch';
 import './index.scss';
 
 const { remote } = window.require('electron');
+const nedb = require('../../tools/nedb');
+
 const { BrowserWindow } = remote;
 let win = null;
+const USER_ID = 'i_security';
 
 class Login extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
+      loading: false,
       checked: false,
       password: '',
     }
+  }
+
+  componentDidMount() {
+    this.initialUserValue();
+  }
+
+  initialUserValue = () => {
+    nedb.user.find({ _id: USER_ID }, (err, docs) => {
+      if (err) { return console.log(err) };
+      if (!docs || docs.length === 0) { return console.log('NO initial user!') };
+      const user = docs[0];
+      if (user.checked) {
+        this.setState({ checked: true, password: user.password || '' })
+      }
+    })
+  }
+
+  createUser = () => {
+    const { password, checked } = this.state;
+    nedb.user.insert({ _id: USER_ID, checked: checked, password: password }, (err, newDoc) => {
+      if (err) { return console.log(err) };
+      console.log(newDoc)
+    })
+  }
+
+  updateUser = () => {
+    const { checked } = this.state;
+    nedb.user.update({ _id: USER_ID }, { $set: { checked: checked } }, {}, (err, numAffected, affectedDocuments, upsert) => {
+      if (err) { return console.log(err) };
+      console.log(err, numAffected, affectedDocuments, upsert)
+    })
+  }
+
+  userExist = () => {
+    const { password } = this.state;
+    return new Promise((resolve) => {
+      nedb.user.find({ _id: USER_ID }, (err, docs) => {
+        if (err) { console.log(err); return resolve('ERROR'); }
+        if (!docs || docs.length === 0) return resolve('NOT_EXIST');
+        const user = docs[0];
+        if (user.password !== password) return resolve('INVALID');
+        resolve('VALID');
+      })
+    })
   }
 
   handleChange = (event) => {
@@ -29,19 +78,37 @@ class Login extends Component {
     this.setState({ checked: event.target.checked });
   }
 
-  handleLogin = (event) => {
+  showErrorNotify = () => {
+    /**
+     * 使用 HTML-API Notification 模块
+     * https://w3c-html-ig-zh.github.io/notifications/whatwg/
+     */
+    new Notification('Warm Tips', {
+      body: 'Please enter a valid password.',
+      silent: false
+    })
+  }
+
+  showMainWindow = () => {
+    this.setState({ loading: true })
+  }
+
+  handleLogin = async (event) => {
     event.preventDefault();
     const { password } = this.state;
-    if (!password || password.trim() === '') {
-      /**
-       * 使用 HTML-API Notification 模块
-       * https://w3c-html-ig-zh.github.io/notifications/whatwg/
-       */
-      new Notification('Warm Tips', {
-        body: 'Please enter a valid password.',
-        silent: false
-      })
-      return;
+    if (!password || password.trim() === '') return this.showErrorNotify();
+    const result = await this.userExist();
+    switch (result) {
+      case 'ERROR':
+      case 'INVALID': this.showErrorNotify(); break;
+      case 'NOT_EXIST':
+        this.createUser();
+        this.showMainWindow(); break;
+      case 'VALID':
+        this.updateUser();
+        this.showMainWindow();
+        break;
+      default: break;
     }
   };
 
@@ -66,6 +133,7 @@ class Login extends Component {
   }
 
   render() {
+    const { loading, password, checked } = this.state;
     return (
       <div className="login">
         <header className="login-logo">
@@ -85,18 +153,28 @@ class Login extends Component {
                   id="adornment-password"
                   className="is-input"
                   placeholder="Password"
-                  type={this.state.showPassword ? 'text' : 'password'}
-                  value={this.state.password}
+                  type="password"
+                  value={password}
                   onChange={this.handleChange}
                   inputProps={{ maxLength: 20 }}
                   endAdornment={
                     <InputAdornment position="end">
-                      <IconButton
-                        aria-label="Enter to login"
-                        onClick={this.handleLogin}
-                      >
-                        <ArrowForward />
-                      </IconButton>
+                      {
+                        loading ? (
+                          <IconButton
+                            aria-label="Loading to login"
+                          >
+                            <Refresh className="refresh-loading" />
+                          </IconButton>
+                        ) : (
+                            <IconButton
+                              aria-label="Enter to login"
+                              onClick={this.handleLogin}
+                            >
+                              <ArrowForward />
+                            </IconButton>
+                          )
+                      }
                     </InputAdornment>
                   }
                 />
@@ -107,7 +185,7 @@ class Login extends Component {
                   classes={{
                     checked: 'is-switch-checked',
                   }}
-                  checked={this.state.checked}
+                  checked={checked}
                   onChange={this.handleCheckBoxChange}
                   value="checked"
                   color="primary"
