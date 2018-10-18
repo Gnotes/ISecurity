@@ -110,7 +110,7 @@ class Login extends Component {
   showMainWindow = () => {
     this.setState({ loading: true });
     if (!mainWindow) {
-      mainWindow = new BrowserWindow({ width: 800, height: 600, show: false, resizable: false, maximizable: false, minimizable: false, title: 'iSecurity' })
+      mainWindow = new BrowserWindow({ width: 800, height: 600, show: false, titleBarStyle: 'hiddenInset', resizable: false, maximizable: false, minimizable: false, title: 'iSecurity' })
       //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
       mainWindow.once('ready-to-show', () => {
         mainWindow.show();
@@ -152,7 +152,7 @@ class Login extends Component {
 
   onClickPrivacy = () => {
     if (!win) {
-      win = new BrowserWindow({ width: 800, height: 600, show: false, resizable: false, maximizable: false, minimizable: false, title: 'iSecurity' })
+      win = new BrowserWindow({ width: 800, height: 600, show: false, resizable: false, maximizable: false, titleBarStyle: 'hiddenInset', minimizable: false, title: 'iSecurity' })
       //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
       win.once('ready-to-show', () => {
         win.show()
@@ -170,14 +170,6 @@ class Login extends Component {
     win.loadURL('http://localhost:3000/privacy');
   }
 
-  onClickCloseWindow = () => {
-    ipcRenderer.send('asynchronous-message', 'close-login-window');
-  }
-
-  onClickMinWindow = () => {
-    ipcRenderer.send('asynchronous-message', 'minimize-login-window');
-  }
-
   hideLoginWindow = () => {
     ipcRenderer.send('asynchronous-message', 'hide-login-window');
   }
@@ -191,19 +183,6 @@ class Login extends Component {
     const theme = themes[themeName];
     return (
       <div className="login" style={{ background: theme.background }}>
-        <span onClick={this.onClickCloseWindow} className={`close-button theme-${theme.name}`}>
-          <svg viewBox="0 0 1024 1024" width="16" height="16">
-            <path d="M512 96C282.2 96 96 282.2 96 512s186.2 416 416 416 416-186.2 416-416S741.8 96 512 96z m105.4 566.6L512 557.2l-105.4 105.4c-12.4 12.4-32.8 12.4-45.2 0-6.2-6.2-9.4-14.4-9.4-22.6 0-8.2 3.2-16.4 9.4-22.6l105.4-105.4-105.4-105.4c-6.2-6.2-9.4-14.4-9.4-22.6 0-8.2 3.2-16.4 9.4-22.6 12.4-12.4 32.8-12.4 45.2 0l105.4 105.4 105.4-105.4c12.4-12.4 32.8-12.4 45.2 0 12.4 12.4 12.4 32.8 0 45.2L557.2 512l105.4 105.4c12.4 12.4 12.4 32.8 0 45.2-12.4 12.6-32.8 12.6-45.2 0z"
-              p-id="1524"></path>
-          </svg>
-        </span>
-        <span onClick={this.onClickMinWindow} className={`minus-button theme-${theme.name}`}>
-          <svg viewBox="0 0 1024 1024" width="16" height="16">
-            <path d="M512 96C282.2 96 96 282.2 96 512s186.2 416 416 416c229.8 0 416-186.2 416-416S741.8 96 512 96zM512 893.4c-210.2 0-381.4-171-381.4-381.4 0-210.2 171-381.4 381.4-381.4 210.2 0 381.4 171 381.4 381.4C893.4 722.2 722.2 893.4 512 893.4z"
-              p-id="2458"></path>
-            <path d="M256 496l512 0 0 34-512 0 0-34Z" p-id="2459"></path>
-          </svg>
-        </span>
         <header className="login-logo" style={{ backgroundColor: theme.headerBackgroundColor }}>
           <Avatar className="avatar-text">S</Avatar>
         </header>

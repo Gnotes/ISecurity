@@ -34,7 +34,7 @@ async function createWindow() {
     await installExtensions();
   }
   // 创建浏览器窗口。
-  win = new BrowserWindow({ width: 300, height: 400, show: false, frame: false, resizable: false, maximizable: false, title: 'iSecurity' })
+  win = new BrowserWindow({ width: 300, height: 400, show: false, transparent: true, frame: false, titleBarStyle: 'hiddenInset', resizable: false, maximizable: false, title: 'iSecurity' })
 
   //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
   win.once('ready-to-show', () => {
@@ -123,8 +123,6 @@ app.on('activate', () => {
 ipcMain.on('asynchronous-message', (e, args) => {
   if (!win) return;
   switch (args) {
-    case 'close-login-window': win.close(); break;
-    case 'minimize-login-window': win.minimize(); break;
     case 'hide-login-window': win.hide(); break;
     case 'show-login-window': win.show(); break;
     default: break;

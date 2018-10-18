@@ -8,34 +8,9 @@
 }
 .login {
   height: 100%;
+  opacity: 0.97;
   -webkit-app-region: drag;
-
-  .close-button {
-    left: 5px;
-  }
-  .minus-button {
-    left: 25px;
-  }
-  .close-button,.minus-button{
-    position: absolute;
-    top: 5px;
-    svg {
-      fill:#BDBDBD;
-    }
-    &:hover{
-      cursor: pointer;
-      svg {
-        fill:#FA6261;
-      }
-    }
-  }
-  .close-button.theme-gradient,.minus-button.theme-gradient{
-    &:hover{
-      svg {
-        fill:#FFFFFF;
-      }
-    }
-  }
+  
   &-logo{
     padding: 20px 0;
     display: flex;
