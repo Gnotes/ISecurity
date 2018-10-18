@@ -1,5 +1,6 @@
 require('./tools/nedb');
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu } = require('electron');
+const template = require('./menu');
 // 持久化设置
 const settings = require('electron-settings');
 const Notify = require('./tools/notify');
@@ -10,6 +11,20 @@ require('electron-debug')();
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+
+// 更改主题State事件
+const setThemeState = (theme) => {
+  if (!win) return;
+  win.webContents.send('asynchronous-theme', theme)
+}
+
+// 修改用户设置的数据
+const setTheme = (theme) => {
+  if (!settings.has('theme') || settings.get('theme') !== theme) {
+    settings.set('theme', theme);
+    setThemeState(theme);
+  }
+}
 
 async function createWindow() {
   if (!settings.has('theme')) {
@@ -44,6 +59,30 @@ async function createWindow() {
     // 与此同时，你应该删除相应的元素。
     win = null
   })
+
+  // 在main.js 中添加菜单，主要是为了使用 win 对象，发送 asynchronous-theme 事件
+  if (process.platform === 'darwin') {
+    template.unshift({
+      label: 'iSecurity',
+      submenu: [
+        { role: 'about' },
+        { role: 'services', submenu: [] },
+        {
+          label: 'Theme',
+          submenu: [
+            { label: 'Light', click() { setTheme('light') } },
+            { label: 'Gradient', click() { setTheme('gradient') } }
+          ]
+        },
+        { type: 'separator' },
+        { role: 'hide' },
+        { role: 'quit' }
+      ]
+    }, )
+  }
+
+  const menu = Menu.buildFromTemplate(template)
+  Menu.setApplicationMenu(menu)
 }
 
 const installExtensions = async () => {

@@ -10,7 +10,6 @@ import './index.scss';
 import themes from '../../theme';
 
 const settings = window.require('electron-settings');
-const theme = themes[settings.get('theme')];
 const { remote, ipcRenderer } = window.require('electron');
 const nedb = require('../../tools/nedb');
 
@@ -22,11 +21,20 @@ class Login extends Component {
 
   constructor(props) {
     super(props);
+    const theme = settings.get('theme');
     this.state = {
+      themeName: theme,
       loading: false,
       checked: false,
       password: '',
     }
+    this.addThemeChangeListener();
+  }
+
+  addThemeChangeListener = () => {
+    ipcRenderer.on('asynchronous-theme', (event, theme) => {
+      this.setState({ themeName: theme });
+    })
   }
 
   componentDidMount() {
@@ -171,7 +179,8 @@ class Login extends Component {
   }
 
   render() {
-    const { loading, password, checked } = this.state;
+    const { loading, password, checked, themeName } = this.state;
+    const theme = themes[themeName];
     return (
       <div className="login" style={{ background: theme.background }}>
         <span onClick={this.onClickCloseWindow} className={`close-button theme-${theme.name}`}>
