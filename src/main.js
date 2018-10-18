@@ -4,18 +4,25 @@ const template = require('./menu');
 // 持久化设置
 const settings = require('electron-settings');
 const Notify = require('./tools/notify');
+const WManager = require('./tools/window-manager')();
+const { createMainWindow, createPrivacyWindow } = require('./tools/create-window');
 
 // 添加调试开发工具
 require('electron-debug')();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win;
+let loginWindow;
 
 // 更改主题State事件
 const setThemeState = (theme) => {
-  if (!win) return;
-  win.webContents.send('asynchronous-theme', theme)
+  if (!loginWindow) return;
+  const windows = WManager.getAllWindows();
+  if (windows) {
+    windows.forEach((window, i) => {
+      window.webContents.send('asynchronous-theme', theme)
+    })
+  }
 }
 
 // 修改用户设置的数据
@@ -34,11 +41,12 @@ async function createWindow() {
     await installExtensions();
   }
   // 创建浏览器窗口。
-  win = new BrowserWindow({ width: 300, height: 400, show: false, transparent: true, frame: false, titleBarStyle: 'hiddenInset', resizable: false, maximizable: false, title: 'iSecurity' })
-
+  loginWindow = new BrowserWindow({ width: 300, height: 400, show: false, transparent: true, frame: false, titleBarStyle: 'hiddenInset', resizable: false, maximizable: false, title: 'iSecurity' })
+  // 缓存登录窗口，用于获取窗口对象
+  WManager.push('LOGIN_WINDOW', loginWindow);
   //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
-  win.once('ready-to-show', () => {
-    win.show();
+  loginWindow.once('ready-to-show', () => {
+    loginWindow.show();
     Notify.message({
       title: 'Welcome to iSecurity',
       body: 'Thanks for choosing me.',
@@ -47,17 +55,19 @@ async function createWindow() {
   })
 
   // 然后加载应用的远程资源URL。
-  win.loadURL('http://localhost:3000');
+  loginWindow.loadURL('http://localhost:3000');
 
   // 打开开发者工具
-  win.webContents.openDevTools()
+  loginWindow.webContents.openDevTools()
 
   // 当 window 被关闭，这个事件会被触发。
-  win.on('closed', () => {
+  loginWindow.on('closed', () => {
     // 取消引用 window 对象，如果你的应用支持多窗口的话，
     // 通常会把多个 window 对象存放在一个数组里面，
     // 与此同时，你应该删除相应的元素。
-    win = null
+    loginWindow = null
+    // 移除窗口对象
+    WManager.remove('LOGIN_WINDOW');
   })
 
   // 在main.js 中添加菜单，主要是为了使用 win 对象，发送 asynchronous-theme 事件
@@ -112,7 +122,7 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   // 在macOS上，当单击dock图标并且没有其他窗口打开时，
   // 通常在应用程序中重新创建一个窗口。
-  if (win === null) {
+  if (loginWindow === null) {
     createWindow()
   }
 })
@@ -120,11 +130,11 @@ app.on('activate', () => {
 // 在这个文件中，你可以续写应用剩下主进程代码。
 // 也可以拆分成几个文件，然后用 require 导入。
 
-ipcMain.on('asynchronous-message', (e, args) => {
-  if (!win) return;
-  switch (args) {
-    case 'hide-login-window': win.hide(); break;
-    case 'show-login-window': win.show(); break;
+// 监听创建新窗口事件
+ipcMain.on('on-create-window', (e, windowKey) => {
+  switch (windowKey) {
+    case 'MAIN_WINDOW': createMainWindow(); break;
+    case 'PRIVACY_WINDOW': createPrivacyWindow(); break;
     default: break;
   }
 })

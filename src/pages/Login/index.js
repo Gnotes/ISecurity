@@ -10,13 +10,12 @@ import './index.scss';
 import themes from '../../theme';
 
 const settings = window.require('electron-settings');
-const { remote, ipcRenderer } = window.require('electron');
+const { ipcRenderer } = window.require('electron');
 const nedb = require('../../tools/nedb');
 
-const { BrowserWindow } = remote;
-let win = null, mainWindow = null;
 const USER_ID = 'i_security';
 const THEME_CHANGE_CHANNEL = 'asynchronous-theme';
+const MAIN_WINDOW_SHOW_CHANNEL = 'on-main-window-show';
 
 class Login extends Component {
 
@@ -30,6 +29,7 @@ class Login extends Component {
       password: '',
     }
     this.addThemeChangeListener();
+    this.addMainWindowShowListener();
   }
 
   themeChangeListener = (event, theme) => {
@@ -40,12 +40,22 @@ class Login extends Component {
     ipcRenderer.on(THEME_CHANGE_CHANNEL, this.themeChangeListener)
   }
 
+  mainWindowShowListener = () => {
+    const { checked, password } = this.state;
+    this.setState({ loading: false, password: checked ? password : '' });
+  }
+
+  addMainWindowShowListener = () => {
+    ipcRenderer.on(MAIN_WINDOW_SHOW_CHANNEL, this.mainWindowShowListener)
+  }
+
   componentDidMount() {
     this.initialUserValue();
   }
 
   componentWillUnmount() {
     ipcRenderer.removeListener(THEME_CHANGE_CHANNEL, this.themeChangeListener)
+    ipcRenderer.removeListener(MAIN_WINDOW_SHOW_CHANNEL, this.mainWindowShowListener)
   }
 
   initialUserValue = () => {
@@ -109,26 +119,7 @@ class Login extends Component {
 
   showMainWindow = () => {
     this.setState({ loading: true });
-    if (!mainWindow) {
-      mainWindow = new BrowserWindow({ width: 800, height: 600, show: false, titleBarStyle: 'hiddenInset', resizable: false, maximizable: false, minimizable: false, title: 'iSecurity' })
-      //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
-      mainWindow.once('ready-to-show', () => {
-        mainWindow.show();
-        const { checked, password } = this.state;
-        this.setState({ loading: false, password: checked ? password : '' }, this.hideLoginWindow);
-      })
-      // 在渲染完成后添加事件监听
-      mainWindow.webContents.once('did-finish-load', () => {
-        // 窗口关闭时回收窗口
-        mainWindow.once('close', (e) => {
-          mainWindow.destroy();
-          mainWindow = null;
-          this.showLoginWindow();
-        })
-      })
-    }
-    // 然后加载应用的远程资源URL。
-    mainWindow.loadURL('http://localhost:3000/main');
+    this.createWindow('MAIN_WINDOW');
   }
 
   handleLogin = async (event) => {
@@ -151,31 +142,11 @@ class Login extends Component {
   };
 
   onClickPrivacy = () => {
-    if (!win) {
-      win = new BrowserWindow({ width: 800, height: 600, show: false, resizable: false, maximizable: false, titleBarStyle: 'hiddenInset', minimizable: false, title: 'iSecurity' })
-      //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁
-      win.once('ready-to-show', () => {
-        win.show()
-      })
-      // 在渲染完成后添加事件监听
-      win.webContents.once('did-finish-load', () => {
-        // 窗口关闭时回收窗口
-        win.once('close', (e) => {
-          win.destroy();
-          win = null;
-        })
-      })
-    }
-    // 然后加载应用的远程资源URL。
-    win.loadURL('http://localhost:3000/privacy');
+    this.createWindow('PRIVACY_WINDOW');
   }
 
-  hideLoginWindow = () => {
-    ipcRenderer.send('asynchronous-message', 'hide-login-window');
-  }
-
-  showLoginWindow = () => {
-    ipcRenderer.send('asynchronous-message', 'show-login-window');
+  createWindow = (key) => {
+    ipcRenderer.send('on-create-window', key);
   }
 
   render() {
