@@ -16,6 +16,7 @@ const nedb = require('../../tools/nedb');
 const { BrowserWindow } = remote;
 let win = null, mainWindow = null;
 const USER_ID = 'i_security';
+const THEME_CHANGE_CHANNEL = 'asynchronous-theme';
 
 class Login extends Component {
 
@@ -31,14 +32,20 @@ class Login extends Component {
     this.addThemeChangeListener();
   }
 
+  themeChangeListener = (event, theme) => {
+    this.setState({ themeName: theme });
+  };
+
   addThemeChangeListener = () => {
-    ipcRenderer.on('asynchronous-theme', (event, theme) => {
-      this.setState({ themeName: theme });
-    })
+    ipcRenderer.on(THEME_CHANGE_CHANNEL, this.themeChangeListener)
   }
 
   componentDidMount() {
     this.initialUserValue();
+  }
+
+  componentWillUnmount() {
+    ipcRenderer.removeListener(THEME_CHANGE_CHANNEL, this.themeChangeListener)
   }
 
   initialUserValue = () => {

@@ -10,7 +10,7 @@ require('electron-debug')();
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win;
 
 // 更改主题State事件
 const setThemeState = (theme) => {
