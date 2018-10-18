@@ -1,5 +1,7 @@
 require('./tools/nedb');
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain } = require('electron');
+// 持久化设置
+const settings = require('electron-settings');
 const Notify = require('./tools/notify');
 
 // 添加调试开发工具
@@ -10,6 +12,9 @@ require('electron-debug')();
 let win
 
 async function createWindow() {
+  if (!settings.has('theme')) {
+    settings.set('theme', 'light');
+  }
   if (process.env.NODE_ENV === 'development') {
     await installExtensions();
   }

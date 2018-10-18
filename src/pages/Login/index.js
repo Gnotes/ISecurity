@@ -7,7 +7,10 @@ import ArrowForward from '@material-ui/icons/ArrowForward';
 import Refresh from '@material-ui/icons/Refresh';
 import Switch from '@material-ui/core/Switch';
 import './index.scss';
+import themes from '../../theme';
 
+const settings = window.require('electron-settings');
+const theme = themes[settings.get('theme')];
 const { remote, ipcRenderer } = window.require('electron');
 const nedb = require('../../tools/nedb');
 
@@ -170,25 +173,25 @@ class Login extends Component {
   render() {
     const { loading, password, checked } = this.state;
     return (
-      <div className="login">
-        <span onClick={this.onClickCloseWindow} className="close-button">
+      <div className="login" style={{ background: theme.background }}>
+        <span onClick={this.onClickCloseWindow} className={`close-button theme-${theme.name}`}>
           <svg viewBox="0 0 1024 1024" width="16" height="16">
             <path d="M512 96C282.2 96 96 282.2 96 512s186.2 416 416 416 416-186.2 416-416S741.8 96 512 96z m105.4 566.6L512 557.2l-105.4 105.4c-12.4 12.4-32.8 12.4-45.2 0-6.2-6.2-9.4-14.4-9.4-22.6 0-8.2 3.2-16.4 9.4-22.6l105.4-105.4-105.4-105.4c-6.2-6.2-9.4-14.4-9.4-22.6 0-8.2 3.2-16.4 9.4-22.6 12.4-12.4 32.8-12.4 45.2 0l105.4 105.4 105.4-105.4c12.4-12.4 32.8-12.4 45.2 0 12.4 12.4 12.4 32.8 0 45.2L557.2 512l105.4 105.4c12.4 12.4 12.4 32.8 0 45.2-12.4 12.6-32.8 12.6-45.2 0z"
               p-id="1524"></path>
           </svg>
         </span>
-        <span onClick={this.onClickMinWindow} className="minus-button">
+        <span onClick={this.onClickMinWindow} className={`minus-button theme-${theme.name}`}>
           <svg viewBox="0 0 1024 1024" width="16" height="16">
             <path d="M512 96C282.2 96 96 282.2 96 512s186.2 416 416 416c229.8 0 416-186.2 416-416S741.8 96 512 96zM512 893.4c-210.2 0-381.4-171-381.4-381.4 0-210.2 171-381.4 381.4-381.4 210.2 0 381.4 171 381.4 381.4C893.4 722.2 722.2 893.4 512 893.4z"
               p-id="2458"></path>
             <path d="M256 496l512 0 0 34-512 0 0-34Z" p-id="2459"></path>
           </svg>
         </span>
-        <header className="login-logo">
+        <header className="login-logo" style={{ backgroundColor: theme.headerBackgroundColor }}>
           <Avatar className="avatar-text">S</Avatar>
         </header>
         <div className="login-bottom">
-          <div className="logan">
+          <div className="logan" style={{ color: theme.textColor }}>
             <p>
               Welcome to iSecurity<br />
               Manage your password from here.
@@ -231,18 +234,20 @@ class Login extends Component {
                 <Switch
                   className="is-switch"
                   classes={{
-                    checked: 'is-switch-checked',
+                    switchBase: `is-switch-base-${theme.name}`,
+                    checked: `is-switch-checked-${theme.name}`,
+                    bar: `is-switch-bar-${theme.name}`,
                   }}
                   checked={checked}
                   onChange={this.handleCheckBoxChange}
                   value="checked"
                   color="primary"
                 />
-                <span className="remember-text">Remember the password</span>
+                <span className="remember-text" style={{ color: theme.textColor }}>Remember the password</span>
               </div>
             </form>
-            <div className="privacy-agreement">
-              <p>Read the <span onClick={this.onClickPrivacy}>《Privacy agreement》</span></p>
+            <div className="privacy-agreement" style={{ color: theme.readColor }}>
+              <p>Read the <span onClick={this.onClickPrivacy} style={{ color: theme.linkColor }}>《Privacy agreement》</span></p>
             </div>
           </div>
         </div>
