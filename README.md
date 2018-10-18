@@ -23,7 +23,8 @@ yarn dev
   <img alt="iSecurity" src="./app-gradient.png" width="300" style="display:inline-block;"/>
 </div>
 <div align="center">
-  <img alt="privacy" src="./privacy.png" width="400" style="display:inline-block;"/>
+  <img alt="privacy" src="./privacy.png" width="300" style="display:inline-block;"/>
+  <img alt="privacy" src="./privacy-gradient.png" width="300" style="display:inline-block;"/>
 </div>
 <div align="center">
   <img alt="Notification" src="./notification.png" width="300" style="display:inline-block;"/>
