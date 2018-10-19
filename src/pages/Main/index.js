@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
+import Drawer from '../../components/Drawer';
 import './index.scss';
 import themes from '../../theme';
 
@@ -17,6 +18,7 @@ export default class Main extends Component {
       themeName: theme,
       loading: false,
       checked: false,
+      open: false,
       password: '',
     }
     this.addThemeChangeListener();
@@ -39,11 +41,12 @@ export default class Main extends Component {
   }
 
   onClickAddCategory = () => {
-
+    const { open } = this.state;
+    this.setState({ open: !open })
   }
 
   render() {
-    const { themeName } = this.state;
+    const { themeName, open } = this.state;
     const theme = themes[themeName];
 
     return (
@@ -100,9 +103,12 @@ export default class Main extends Component {
             </div>
           </div>
         </div>
-        <div className="main-center">
+        <div className="main-center" id="main-center">
           <h1>Center</h1>
         </div>
+        <Drawer width={300} open={open} mask={false} onClickMask={this.onClickAddCategory}>
+          <h1 onClick={this.onClickAddCategory}>Drawer</h1>
+        </Drawer>
       </div>
     );
   }

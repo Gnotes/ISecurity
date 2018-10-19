@@ -1,0 +1,26 @@
+.drawer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 999;
+  transform: translateX(100%);
+  transition: all 0.5s;
+  background: transparent;
+
+  &.open {
+    transform: none;
+  }
+  &.drawer-mask {
+    background: rgba(0,0,0,0.2);
+  }
+
+  .drawer-wrap {
+    float: right;
+    background-color: #FFF;
+    &.shadow {
+      box-shadow: 0 0 5px 2px #eaeaf1;
+    }
+  }
+}
