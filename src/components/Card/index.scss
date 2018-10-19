@@ -1,0 +1,103 @@
+.card {
+  display: inline-flex;
+  box-shadow: 0 0 20px 2px #efefff;
+  width: 200px;
+  height: 110px;
+  overflow: hidden;
+  margin: 11px;
+  padding: 10px 10px 0px 0;
+  border-radius: 5px;
+  box-sizing: border-box;
+  &:hover {
+    box-shadow: 0 0 20px 2px #d7d7ff;
+
+    .card-right {
+      .card-action {
+        .card-icon {
+          visibility: visible;
+        }
+      }
+    }
+  }
+
+  .card-left{
+    width: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .card-logo {
+
+    }
+  }
+  .card-right {
+    flex:1;
+
+    .card-action {
+      text-align: right;
+
+      .card-icon {
+        width: 16px;
+        height: 16px;
+        visibility: hidden;
+        color: #eaeaf1;
+        &:hover {
+          color: #958DF1;
+          cursor: pointer;
+        }
+      }
+      .icon-copy {
+  
+      }
+      .icon-check{
+        margin-left: 10px;
+      }
+    }
+
+    .card-content {
+      text-align: center;
+      font-size: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-items: center;
+      align-items: center;
+      padding: 10px 0;
+      line-height: 19px;
+      color: #3a383f;
+
+      .card-title {
+        width: 130px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+      .card-password {
+        width: 130px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-weight: bold;
+      }
+    }
+    .card-bottom {
+      text-align: right;
+
+      .card-flag {
+        display: inline-flex;
+        border-radius: 50%;
+        &-outter {
+          width: 12px;
+          height: 12px;
+          background-color: #eaeaf1;
+          align-items: center;
+          justify-content: center;
+        }
+        &-inner {
+          width: 10px;
+          height: 10px;
+          background-color: yellow;
+        }
+      }
+    }
+  }
+}
