@@ -5,7 +5,7 @@ let mainWindow = null, privacyWindow = null;
 module.exports = {
   createMainWindow: () => {
     if (!mainWindow) {
-      mainWindow = new BrowserWindow({ width: 800, height: 600, show: false, titleBarStyle: 'hiddenInset', resizable: false, maximizable: false, minimizable: false, title: 'iSecurity' })
+      mainWindow = new BrowserWindow({ width: 800, height: 600, show: false, titleBarStyle: 'hiddenInset', resizable: false, maximizable: false, title: 'iSecurity' })
       // 缓存主窗口，用于获取窗口对象
       WManager.push('MAIN_WINDOW', mainWindow);
       //在加载页面时，渲染进程第一次完成绘制时，会发出 ready-to-show 事件 。 在此事件后显示窗口将没有视觉闪烁

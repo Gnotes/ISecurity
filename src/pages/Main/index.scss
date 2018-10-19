@@ -1,25 +1,133 @@
-.privacy {
-  .privacy-header {
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: #FFF;
-    .avatar-text {
-      margin: 20px 0;
+.main {
+  height: 100%;
+  display: flex;
+  -webkit-app-region: drag;
+
+  &-side {
+    display: inline-flex;
+    width: 110px;
+    height: 100%;
+    flex-direction: column;
+    .side-top{
+      height: 90px;
+      padding-top: 25px;
+      box-sizing: border-box;
+      align-items: center;
+      justify-content: center;
+      display: flex;
+      
     }
-    > span {
-      color: #564c4c;
-      font-size: 14px;
-      margin-left: 10px;
-      font-weight: 500;
+    .side-middle {
+      flex: 1;
+      text-align: center;
+      overflow-y: auto;
+
+      .cate-group {
+        padding: 7px 0;
+        position: relative;
+        .menu-avatar {
+          padding: 3px;
+  
+          .cate-item {
+            width: 50px;
+            height: 50px;
+            overflow: hidden;
+            border-radius: 50%;
+          }
+        }
+      }
+    }
+    .side-like {
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+
+      .side-pulse {
+        position: absolute;
+        top: -18px;
+        left: 40px;
+        z-index: 999;
+      }
+      
+      .like-button {
+        display: inline-flex;
+        padding: 6px 10px;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        &:hover {
+          background-color: rgba(0,0,0,0.08);
+          cursor: pointer;
+        }
+        > span {
+          font-size: 12px;
+          margin-left: 5px;
+        }
+      }
+      .seperator {
+        display: inline-block;
+        width: 25px;
+        height: 1px;
+        background-color: #000;
+        position: absolute;
+        top: 0;
+
+        &.left {
+          left: 22px;
+        }
+        &.right {
+          left: 62px;
+        }
+      }
+    }
+    
+  }
+  .side-theme-light {
+    background-color:#F4F5F7;
+    .menu-icon {
+      color: #9587F7;
+    }
+    .side-middle{
+      .cate-group{
+        .menu-avatar {
+          background-color: rgba(0,0,0,0.08);
+        }
+        &.active {
+          background-color: #FDD6F8;
+        }
+        .cate-item {
+          color: #FFFFFF;
+          background-color: #9587F7;
+        }
+        .cate-item-add {
+          fill: #9587F7;
+        }
+      }
+    }
+    .side-like {
+      .like-button {
+        svg {
+          fill: #9587F7;
+        }
+        >span {
+          color: #8898AA;
+        }
+      }
+      .seperator {
+        background-color: #9587F7;
+      }
+      .side-pulse {
+        fill: #9587F7;
+      }
     }
   }
-  .privacy-text {
-    padding: 20px 40px;
-    font-size: 12px;
-    color: #8898AA;
-    letter-spacing: 0.37px;
-    text-align: center;
+  .side-theme-gradient {
+    background: linear-gradient(to right, red , blue);
+  }
+  &-center {
+    display: inline-flex;
+    flex: 1;
   }
 }
