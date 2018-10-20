@@ -6,7 +6,7 @@ import RemoveRedEye from '@material-ui/icons/RemoveRedEye';
 import Link from '@material-ui/icons/Link';
 import './index.scss';
 
-class Drawer extends PureComponent {
+class Card extends PureComponent {
   render() {
     const { shadow, className } = this.props;
     return (
@@ -33,13 +33,13 @@ class Drawer extends PureComponent {
   }
 }
 
-Drawer.propTypes = {
+Card.propTypes = {
   className: PropTypes.string,
   onClickMask: PropTypes.func
 }
 
-Drawer.defaultProps = {
+Card.defaultProps = {
   onClickMask: () => null,
 }
 
-export default Drawer;
+export default Card;
