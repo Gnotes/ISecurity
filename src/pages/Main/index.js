@@ -105,6 +105,7 @@ export default class Main extends Component {
           </div>
         </div>
         <div className="main-center" id="main-center">
+          <Card type="add" />
           <Card />
           <Card />
           <Card />

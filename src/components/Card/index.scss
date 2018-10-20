@@ -5,9 +5,9 @@
   height: 110px;
   overflow: hidden;
   margin: 11px;
-  padding: 10px 10px 0px 0;
   border-radius: 5px;
   box-sizing: border-box;
+  vertical-align: middle;
   &:hover {
     box-shadow: 0 0 20px 2px #d7d7ff;
 
@@ -19,16 +19,33 @@
       }
     }
   }
-
-  .card-left{
-    width: 60px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    .card-logo {
-
+  &.card-password {
+    padding: 10px 10px 0px 0;
+    .card-left{
+      width: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
   }
+
+  &.card-add {
+    align-items: center;
+    justify-content: center;
+
+    .menu-avatar {
+      padding: 5px;
+      &:hover{
+        svg {
+          fill: #958DF1;
+        }
+      }
+      svg {
+        fill: #d7d7ff;
+      }
+    }
+  }
+
   .card-right {
     flex:1;
 
@@ -44,9 +61,6 @@
           color: #958DF1;
           cursor: pointer;
         }
-      }
-      .icon-copy {
-  
       }
       .icon-check{
         margin-left: 10px;
