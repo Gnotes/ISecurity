@@ -40,7 +40,7 @@ Drawer.propTypes = {
 
 Drawer.defaultProps = {
   open: false,
-  mask: true,
+  mask: false,
   shadow: true,
   width: '100%',
   height: '100%',

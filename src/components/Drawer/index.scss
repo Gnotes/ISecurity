@@ -19,6 +19,8 @@
   .drawer-wrap {
     float: right;
     background-color: #FFF;
+    -webkit-app-region: no-drag;
+
     &.shadow {
       box-shadow: 0 0 5px 2px #eaeaf1;
     }

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
-import Drawer from '../../components/Drawer';
+import CardDrawer from '../../components/CardDrawer';
 import Card from '../../components/Card';
 import './index.scss';
 import themes from '../../theme';
@@ -42,6 +42,10 @@ export default class Main extends Component {
   }
 
   onClickAddCategory = () => {
+
+  }
+
+  onClickAddCard = () => {
     const { open } = this.state;
     this.setState({ open: !open })
   }
@@ -105,15 +109,15 @@ export default class Main extends Component {
           </div>
         </div>
         <div className="main-center" id="main-center">
-          <Card type="add" />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          <Card type="add" onClickAdd={this.onClickAddCard} />
+          <Card onClickIcon={this.onClickAddCard} />
+          <Card onClickIcon={this.onClickAddCard} />
+          <Card onClickIcon={this.onClickAddCard} />
+          <Card onClickIcon={this.onClickAddCard} />
         </div>
-        <Drawer width={300} open={open} mask={false} onClickMask={this.onClickAddCategory}>
-          <h1 onClick={this.onClickAddCategory}>Drawer</h1>
-        </Drawer>
+        <CardDrawer width={300} open={open} mask={false} onClickMask={this.onClickAddCard}>
+          <h1 onClick={this.onClickAddCategory}>CardDrawer</h1>
+        </CardDrawer>
       </div>
     );
   }

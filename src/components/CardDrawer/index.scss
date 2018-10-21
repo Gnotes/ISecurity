@@ -1,0 +1,62 @@
+.drawer-action {
+  text-align: right;
+  padding-top: 10px;
+  padding-right: 20px;
+  .action-item {
+    fill: #A3A3A3;
+    &:hover {
+      fill: #958DF1;
+      cursor: pointer;
+    }
+  }
+  svg {
+    margin-left: 10px;
+  }
+}
+.card-form {
+  .card-input-group {
+    margin-bottom: 10px;
+    text-align: center;
+    & .card-input-group {
+      margin-top: 10px;
+    }
+    .card-input {
+      width: 250px;
+
+      .icon-blue {
+        color: #958DF1;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+
+    .card-flag-wrap {
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 25px;
+
+      .mark-text {
+        color: #A3A3A3;
+      }
+      .card-flag {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+    .twitter-picker {
+      margin-left: 12px;
+    }
+  }
+
+  .seperator {
+    height: 20px;
+  }
+}

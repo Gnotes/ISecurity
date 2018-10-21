@@ -26,6 +26,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      &:hover {
+        cursor: pointer;
+      }
     }
   }
 
@@ -50,20 +53,32 @@
     flex:1;
 
     .card-action {
-      text-align: right;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
 
       .card-icon {
+        visibility: hidden;
+      }
+      
+      .icon-link{
+        color: #eaeaf1;
         width: 16px;
         height: 16px;
-        visibility: hidden;
-        color: #eaeaf1;
         &:hover {
           color: #958DF1;
           cursor: pointer;
         }
       }
-      .icon-check{
+      .icon-copy {
+        width: 12px;
+        height: 12px;
         margin-left: 10px;
+        fill: #eaeaf1;
+        &:hover {
+          fill: #958DF1;
+          cursor: pointer;
+        }
       }
     }
 
