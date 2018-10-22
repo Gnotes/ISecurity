@@ -133,7 +133,6 @@ export default class Main extends Component {
                 <Avatar className="cate-item">C</Avatar>
               </IconButton>
             </div>
-
             <div className="cate-group">
               <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickAddCategory}>
                 <svg viewBox="0 0 1024 1024" width="46" height="46" className="cate-item-add">
