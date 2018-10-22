@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import MoreHoriz from '@material-ui/icons/MoreHoriz';
+import Edit from '@material-ui/icons/Edit';
+import Delete from '@material-ui/icons/Delete';
 import Avatar from '@material-ui/core/Avatar';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import CardDrawer from '../../components/CardDrawer';
 import CategoryDrawer from '../../components/CategoryDrawer';
 import Card from '../../components/Card';
@@ -22,7 +27,9 @@ export default class Main extends Component {
       checked: false,
       open: false,
       cateOpen: false,
+      Popopen: false,
       password: '',
+      anchorEl: null,
     }
     this.addThemeChangeListener();
   }
@@ -53,12 +60,40 @@ export default class Main extends Component {
     this.setState({ open: !open })
   }
 
+  handleClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
   render() {
-    const { themeName, open, cateOpen } = this.state;
+    const { themeName, open, cateOpen, anchorEl } = this.state;
     const theme = themes[themeName];
+    const popopen = Boolean(anchorEl);
 
     return (
       <div className="main">
+        <Menu
+          anchorEl={anchorEl}
+          open={popopen}
+          className="popover-menu"
+          onClose={this.handleClose}
+          PaperProps={{
+            style: {
+              width: 100,
+              marginLeft: 15
+            },
+          }}
+        >
+          <MenuItem onClick={this.handleClose}>
+            <Edit className="icon-action" />编辑
+          </MenuItem>
+          <MenuItem onClick={this.handleClose}>
+            <Delete className="icon-action" />删除
+          </MenuItem>
+        </Menu>
         <div className={`main-side side-theme-${theme.name}`}>
           <div className="side-top">
             <IconButton className="menu-icon" aria-label="Menu">
@@ -67,25 +102,38 @@ export default class Main extends Component {
           </div>
           <div className="side-middle">
             <div className="cate-group">
+              <div className="pop-action">
+                <MoreHoriz onClick={this.handleClick} />
+              </div>
               <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory}>
                 <Avatar className="cate-item">H</Avatar>
               </IconButton>
             </div>
-            <div className="cate-group active">
+            <div className="cate-group">
+              <div className="pop-action">
+                <MoreHoriz onClick={this.handleClick} />
+              </div>
               <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory}>
                 <Avatar className="cate-item">W</Avatar>
               </IconButton>
             </div>
             <div className="cate-group">
+              <div className="pop-action">
+                <MoreHoriz onClick={this.handleClick} />
+              </div>
               <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory}>
                 <Avatar className="cate-item">E</Avatar>
               </IconButton>
             </div>
             <div className="cate-group">
+              <div className="pop-action">
+                <MoreHoriz onClick={this.handleClick} />
+              </div>
               <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory}>
                 <Avatar className="cate-item">C</Avatar>
               </IconButton>
             </div>
+
             <div className="cate-group">
               <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickAddCategory}>
                 <svg viewBox="0 0 1024 1024" width="46" height="46" className="cate-item-add">

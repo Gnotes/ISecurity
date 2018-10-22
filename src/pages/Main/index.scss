@@ -25,6 +25,11 @@
       .cate-group {
         padding: 7px 0;
         position: relative;
+        &:hover {
+          .pop-action {
+            visibility: visible;
+          }
+        }
         .menu-avatar {
           padding: 3px;
   
@@ -33,6 +38,16 @@
             height: 50px;
             overflow: hidden;
             border-radius: 50%;
+          }
+        }
+        .pop-action {
+          position: absolute;
+          top: 0px;
+          right: 5px;
+          visibility: hidden;
+          color:#9587F7;
+          &:hover {
+            cursor: pointer;
           }
         }
       }
@@ -131,5 +146,19 @@
     background: url('../../assets/bg.png') no-repeat;
     background-size: contain;
     background-position: center;
+  }
+}
+
+.popover-menu {
+  ul > li {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 12px;
+    .icon-action {
+      color: #8898AA;
+      width: 14px;
+      height: 14px;
+      margin-right: 5px;
+    }
   }
 }
