@@ -35,5 +35,12 @@
     color: #8898AA;
     letter-spacing: 0.37px;
     text-align: center;
+    a {
+      color: #8898AA;
+      text-decoration: none;
+      &:hover {
+        color: #9587F7;
+      }
+    }
   }
 }

@@ -43,7 +43,22 @@ export default class Privacy extends Component {
           <span>The Privacy Agreement</span>
         </div>
         <div className="privacy-text">
-          <p>Some privacies will be show here.</p>
+          <p>
+            iSecurity, a compatible Password Manager for OS X<br />
+            Copyright (C) Xing.he
+          </p>
+          <p>
+            This program is free software: you can redistribute it and/or modify
+            it under the terms of the GNU General Public License as published by
+            the Free Software Foundation, either version 3 of the License, or
+            (at your option) any later version.
+          </p>
+          <p>
+            This program is distributed in the hope that it will be useful,
+            but WITHOUT ANY WARRANTY; without even the implied warranty of
+            MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+            GNU General Public License for more details. see <a href="https://github.com/Gnotes/ISecurity">https://github.com/Gnotes/ISecurity</a>.
+          </p>
         </div>
         <Footer />
       </div>

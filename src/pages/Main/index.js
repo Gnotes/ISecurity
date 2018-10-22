@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import LockOpen from '@material-ui/icons/LockOpen';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
@@ -18,19 +18,14 @@ import CardDrawer from '../../components/CardDrawer';
 import CategoryDrawer from '../../components/CategoryDrawer';
 import Card from '../../components/Card';
 import './index.scss';
-import themes from '../../theme';
 
 const nedb = require('../../tools/nedb');
-const settings = window.require('electron-settings');
 const { ipcRenderer, shell } = window.require('electron');
-const THEME_CHANGE_CHANNEL = 'asynchronous-theme';
 
 export default class Main extends Component {
   constructor(props) {
     super(props);
-    const theme = settings.get('theme');
     this.state = {
-      themeName: theme,
       loading: false,
       checked: false,
       open: false,
@@ -47,23 +42,10 @@ export default class Main extends Component {
       cateAction: '',
       cardAction: '',
     }
-    this.addThemeChangeListener();
-  }
-
-  themeChangeListener = (event, theme) => {
-    this.setState({ themeName: theme });
-  };
-
-  addThemeChangeListener = () => {
-    ipcRenderer.on(THEME_CHANGE_CHANNEL, this.themeChangeListener)
   }
 
   componentDidMount() {
     this.loadCategory(true);
-  }
-
-  componentWillUnmount() {
-    ipcRenderer.removeListener(THEME_CHANGE_CHANNEL, this.themeChangeListener)
   }
 
   onClickCategory = (cateId) => {
@@ -178,9 +160,12 @@ export default class Main extends Component {
     shell.openExternal('https://github.com/Gnotes/ISecurity');
   }
 
+  onClickLock = () => {
+    ipcRenderer.send('on-lock-main-window');
+  }
+
   render() {
-    const { themeName, open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId, currentCardId, currentPopoverCateId, cateAction, cardAction } = this.state;
-    const theme = themes[themeName];
+    const { open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId, currentCardId, currentPopoverCateId, cateAction, cardAction } = this.state;
     const popopen = Boolean(anchorEl);
 
     return (
@@ -222,10 +207,10 @@ export default class Main extends Component {
             </Button>
           </DialogActions>
         </Dialog>
-        <div className={`main-side side-theme-${theme.name}`}>
+        <div className="main-side side-theme-light">
           <div className="side-top">
-            <IconButton className="menu-icon" aria-label="Menu">
-              <MenuIcon />
+            <IconButton className="menu-icon" aria-label="Menu" onClick={this.onClickLock}>
+              <LockOpen />
             </IconButton>
           </div>
           <div className="side-middle">

@@ -138,3 +138,10 @@ ipcMain.on('on-create-window', (e, windowKey) => {
     default: break;
   }
 })
+
+ipcMain.on('on-lock-main-window', (e) => {
+  const mainWindow = WManager.getWindow('MAIN_WINDOW');
+  if (mainWindow) {
+    mainWindow.close();
+  }
+})
