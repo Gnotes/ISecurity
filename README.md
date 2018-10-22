@@ -38,3 +38,7 @@ yarn dev
 ## The problems that I have encountered
 
 - [Check Problems](./problems.md)
+
+## License
+
+- [GNU General Public License](./LICENSE.txt)
