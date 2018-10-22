@@ -7,6 +7,11 @@ import Backup from '@material-ui/icons/Backup';
 import Link from '@material-ui/icons/Link';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
 import { TwitterPicker } from 'react-color';
 import Drawer from '../Drawer';
 import './index.scss';
@@ -20,6 +25,7 @@ class CardDrawer extends Component {
     this.state = {
       loading: false,
       showColorPicker: false,
+      deleteConfirmOpen: false,
       showPassword: false,
       accountType: '',
       accoutNumber: '',
@@ -101,6 +107,29 @@ class CardDrawer extends Component {
     else this.updateCard();
   }
 
+  onRemove = () => {
+    this.setState({ deleteConfirmOpen: true });
+  }
+
+  hideConfirmDialog = () => {
+    this.setState({ deleteConfirmOpen: false });
+  }
+
+  handleDeleteCard = () => {
+    this.hideConfirmDialog();
+    const { cardId } = this.props;
+    if (!cardId) return;
+    this.removeCard(cardId);
+  }
+
+  removeCard = (cateId) => {
+    nedb.card.remove({ _id: cateId }, (err) => {
+      if (err) return;
+      const { onChange } = this.props;
+      onChange();
+    })
+  }
+
   loadCard = (cardId) => {
     nedb.card.find({ _id: cardId }, (err, docs) => {
       if (err || docs.length === 0) return;
@@ -120,12 +149,30 @@ class CardDrawer extends Component {
 
   render() {
     const { open, onClickMask } = this.props;
-    const { accountType, accoutNumber, password, websiteAddress, email, others, comments, mark, showPassword, showColorPicker } = this.state;
+    const { accountType, accoutNumber, password, websiteAddress, email, others, comments, mark, showPassword, showColorPicker, deleteConfirmOpen } = this.state;
     return (
       <Drawer width={300} open={open} onClickMask={onClickMask}>
+        <Dialog
+          open={deleteConfirmOpen}
+          onClose={this.hideConfirmDialog}
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Are you sure you want to delete me? It will not be restored after deletion!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.hideConfirmDialog} color="primary">
+              I’m kidding
+            </Button>
+            <Button color="primary" onClick={this.handleDeleteCard} >
+              Don't wanna see you again
+            </Button>
+          </DialogActions>
+        </Dialog>
         <div className="drawer-action">
           <Backup className="action-item" onClick={this.onSubmit} />
-          <Delete className="action-item" />
+          <Delete className="action-item" onClick={this.onRemove} />
         </div>
         <div className="card-form">
           <form onSubmit={this.onSubmit}>
@@ -137,7 +184,7 @@ class CardDrawer extends Component {
                 type="text"
                 value={accountType}
                 onChange={this.handleChange.bind(this, 'accountType')}
-                inputProps={{ maxLength: 10 }}
+                inputProps={{ maxLength: 20 }}
               />
             </div>
             <div className="card-input-group">
@@ -159,7 +206,7 @@ class CardDrawer extends Component {
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={this.handleChange.bind(this, 'password')}
-                inputProps={{ maxLength: 20 }}
+                inputProps={{ maxLength: 30 }}
                 endAdornment={
                   <InputAdornment position="end" onClick={this.handleClickShowPassword}>
                     {showPassword ? <VisibilityOff className="icon-blue" /> : <Visibility className="icon-blue" />}
@@ -216,7 +263,7 @@ class CardDrawer extends Component {
                 rowsMax={3}
                 value={comments}
                 onChange={this.handleChange.bind(this, 'comments')}
-                inputProps={{ maxLength: 20 }}
+                inputProps={{ maxLength: 100 }}
               />
             </div>
             <div className="card-input-group">

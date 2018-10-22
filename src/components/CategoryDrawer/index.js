@@ -101,7 +101,7 @@ class CategoryDrawer extends Component {
                 type="text"
                 value={categoryName}
                 onChange={this.handleChange.bind(this, 'categoryName')}
-                inputProps={{ maxLength: 10 }}
+                inputProps={{ maxLength: 20 }}
               />
             </div>
             <div className="card-input-group">
@@ -114,7 +114,7 @@ class CategoryDrawer extends Component {
                 rowsMax={3}
                 value={comments}
                 onChange={this.handleChange.bind(this, 'comments')}
-                inputProps={{ maxLength: 20 }}
+                inputProps={{ maxLength: 100 }}
               />
             </div>
           </form>
