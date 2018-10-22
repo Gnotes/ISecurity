@@ -11,6 +11,9 @@ import { TwitterPicker } from 'react-color';
 import Drawer from '../Drawer';
 import './index.scss';
 
+const nedb = require('../../tools/nedb');
+const { shell } = window.require('electron');
+
 class CardDrawer extends Component {
   constructor(props) {
     super(props);
@@ -42,11 +45,77 @@ class CardDrawer extends Component {
   };
 
   handleClickWebAddress = () => {
-
+    const { websiteAddress } = this.state;
+    if (!websiteAddress) return;
+    shell.openExternal(websiteAddress);
   }
 
   showColorPicker = () => {
     this.setState(state => ({ showColorPicker: !state.showColorPicker }));
+  }
+
+  showErrorNotify = (errMsg) => {
+    /**
+     * 使用 HTML-API Notification 模块
+     * https://w3c-html-ig-zh.github.io/notifications/whatwg/
+     */
+    new Notification('Warm Tips', {
+      body: errMsg || 'Please check your form data !',
+      silent: false
+    })
+  }
+
+  createCard = () => {
+    const { accountType, accoutNumber, password, websiteAddress, email, others, comments, mark } = this.state;
+    const { onChange, currentCateId } = this.props;
+    this.setState({ loading: true })
+    nedb.card.insert({ cateId: currentCateId, accountType, accoutNumber, password, websiteAddress, email, others, comments, mark, createAt: Date.now() }, (err, newDoc) => {
+      if (err) { return this.showErrorNotify(err.message) };
+      this.clearState()
+      onChange();
+    })
+  }
+
+  updateCard = () => {
+    const { accountType, accoutNumber, password, websiteAddress, email, others, comments, mark } = this.state;
+    const { onChange, cardId } = this.props;
+    this.setState({ loading: true })
+    nedb.card.update({ _id: cardId }, { $set: { accountType, accoutNumber, password, websiteAddress, email, others, comments, mark, updateAt: Date.now() } }, {}, (err) => {
+      if (err) { return this.showErrorNotify(err.message) };
+      this.clearState()
+      onChange();
+    })
+  }
+
+  clearState = () => {
+    this.setState({ accountType: '', accoutNumber: '', password: '', websiteAddress: '', email: '', others: '', comments: '', mark: '#8ED1FC', loading: false, showColorPicker: false })
+  }
+
+  onSubmit = (e) => {
+    e.preventDefault(); e.stopPropagation();
+    const { accountType, accoutNumber, password } = this.state;
+    if (!accountType || !accoutNumber || !password) return;
+    const { action } = this.props;
+    if (!action) return;
+    if (action === 'add') this.createCard();
+    else this.updateCard();
+  }
+
+  loadCard = (cardId) => {
+    nedb.card.find({ _id: cardId }, (err, docs) => {
+      if (err || docs.length === 0) return;
+      const { accountType, accoutNumber, password, websiteAddress, email, others, comments, mark } = docs[0];
+      this.setState({ accountType, accoutNumber, password, websiteAddress, email, others, comments, mark })
+    })
+  }
+
+  //WARNING! To be deprecated in React v17. Use new lifecycle static getDerivedStateFromProps instead.
+  componentWillReceiveProps(nextProps) {
+    const { open, cardId, action } = nextProps;
+    if (open) {
+      if (action === 'edit') this.loadCard(cardId);
+      else this.clearState();
+    }
   }
 
   render() {
@@ -55,11 +124,11 @@ class CardDrawer extends Component {
     return (
       <Drawer width={300} open={open} onClickMask={onClickMask}>
         <div className="drawer-action">
-          <Backup className="action-item" />
+          <Backup className="action-item" onClick={this.onSubmit} />
           <Delete className="action-item" />
         </div>
         <div className="card-form">
-          <form onSubmit={this.handleLogin}>
+          <form onSubmit={this.onSubmit}>
             <div className="card-input-group">
               <Input
                 id="adornment-password"
@@ -107,7 +176,7 @@ class CardDrawer extends Component {
                 type='text'
                 value={websiteAddress}
                 onChange={this.handleChange.bind(this, 'websiteAddress')}
-                inputProps={{ maxLength: 20 }}
+                inputProps={{ maxLength: 100 }}
                 endAdornment={
                   <InputAdornment position="end" onClick={this.handleClickWebAddress}>
                     <Link className="icon-blue" />
@@ -165,10 +234,15 @@ class CardDrawer extends Component {
 }
 
 CardDrawer.propTypes = {
-  onClickMask: PropTypes.func
+  onClickMask: PropTypes.func,
+  onChange: PropTypes.func,
+  currentCateId: PropTypes.string,
+  cardId: PropTypes.string,
+  action: PropTypes.oneOf(['add', 'edit', ''])
 }
 
 CardDrawer.defaultProps = {
+  onChange: () => null
 }
 
 export default CardDrawer;

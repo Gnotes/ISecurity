@@ -42,8 +42,10 @@ export default class Main extends Component {
       categories: [],
       cards: [],
       currentCateId: '',
+      currentCardId: '',
       currentPopoverCateId: '',
       cateAction: '',
+      cardAction: '',
     }
     this.addThemeChangeListener();
   }
@@ -79,7 +81,12 @@ export default class Main extends Component {
 
   onClickAddCard = () => {
     const { open } = this.state;
-    this.setState({ open: !open })
+    this.setState({ open: !open, cardAction: 'add', currentCardId: '' })
+  }
+
+  onClickEditCard = (cardId) => {
+    const { open } = this.state;
+    this.setState({ open: !open, cardAction: 'edit', currentCardId: cardId })
   }
 
   handleClick = (cateId, event) => {
@@ -104,6 +111,12 @@ export default class Main extends Component {
         });
       }
     })
+  }
+
+  reloadCard = () => {
+    const { currentCateId } = this.state;
+    this.setState({ open: false })
+    this.loadCard(currentCateId);
   }
 
   loadCard = (cateId) => {
@@ -162,7 +175,7 @@ export default class Main extends Component {
   }
 
   render() {
-    const { themeName, open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId, currentPopoverCateId, cateAction } = this.state;
+    const { themeName, open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId, currentCardId, currentPopoverCateId, cateAction, cardAction } = this.state;
     const theme = themes[themeName];
     const popopen = Boolean(anchorEl);
 
@@ -263,11 +276,11 @@ export default class Main extends Component {
           }
           {
             cards.map((card) => {
-              return (<Card key={card._id} onClickIcon={this.onClickAddCard} data={card} />)
+              return (<Card key={card._id} onClickIcon={this.onClickEditCard.bind(this, card._id)} data={card} />)
             })
           }
         </div>
-        <CardDrawer width={300} open={open} mask={false} onClickMask={this.onClickAddCard} />
+        <CardDrawer action={cardAction} cardId={currentCardId} currentCateId={currentCateId} width={300} open={open} mask={false} onClickMask={this.onClickAddCard} onChange={this.reloadCard} />
         <CategoryDrawer action={cateAction} currentCateId={currentPopoverCateId} width={300} open={cateOpen} mask={false} onClickMask={this.onClickAddCategory} onChange={this.loadCategory} />
       </div>
     );
