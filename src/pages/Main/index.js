@@ -22,7 +22,7 @@ import themes from '../../theme';
 
 const nedb = require('../../tools/nedb');
 const settings = window.require('electron-settings');
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer, shell } = window.require('electron');
 const THEME_CHANGE_CHANNEL = 'asynchronous-theme';
 
 export default class Main extends Component {
@@ -174,6 +174,10 @@ export default class Main extends Component {
     })
   }
 
+  onClickLike = () => {
+    shell.openExternal('https://github.com/Gnotes/ISecurity');
+  }
+
   render() {
     const { themeName, open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId, currentCardId, currentPopoverCateId, cateAction, cardAction } = this.state;
     const theme = themes[themeName];
@@ -257,7 +261,7 @@ export default class Main extends Component {
                 p-id="7250"></path>
             </svg>
             <span className="seperator right"></span>
-            <div className="like-button">
+            <div className="like-button" onClick={this.onClickLike}>
               <svg viewBox="0 0 1024 1024" width="16" height="16">
                 <path d="M42.666667 896h170.666666V384H42.666667v512z m938.666666-469.333333c0-46.933333-38.4-85.333333-85.333333-85.333334h-268.8l42.666667-196.266666v-12.8c0-17.066667-8.533333-34.133333-17.066667-46.933334l-46.933333-42.666666-281.6 281.6c-17.066667 12.8-25.6 34.133333-25.6 59.733333v426.666667c0 46.933333 38.4 85.333333 85.333333 85.333333h384c34.133333 0 64-21.333333 76.8-51.2l128-302.933333c4.266667-8.533333 4.266667-21.333333 4.266667-29.866667v-85.333333h4.266666c0 4.266667 0 0 0 0z"
                   p-id="6768"></path>
