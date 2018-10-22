@@ -189,7 +189,6 @@ export default class Main extends Component {
         </Menu>
         <Dialog
           open={cateDeleteConfirmOpen}
-          keepMounted
           onClose={this.hideConfirmDialog}
         >
           <DialogContent>
