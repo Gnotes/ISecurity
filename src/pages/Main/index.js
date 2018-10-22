@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import classNames from 'classnames';
+import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
@@ -7,12 +9,18 @@ import Delete from '@material-ui/icons/Delete';
 import Avatar from '@material-ui/core/Avatar';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+
 import CardDrawer from '../../components/CardDrawer';
 import CategoryDrawer from '../../components/CategoryDrawer';
 import Card from '../../components/Card';
 import './index.scss';
 import themes from '../../theme';
 
+const nedb = require('../../tools/nedb');
 const settings = window.require('electron-settings');
 const { ipcRenderer } = window.require('electron');
 const THEME_CHANGE_CHANNEL = 'asynchronous-theme';
@@ -28,8 +36,12 @@ export default class Main extends Component {
       open: false,
       cateOpen: false,
       Popopen: false,
+      cateDeleteConfirmOpen: false,
       password: '',
       anchorEl: null,
+      categories: [],
+      cards: [],
+      currentCateId: '',
     }
     this.addThemeChangeListener();
   }
@@ -42,12 +54,20 @@ export default class Main extends Component {
     ipcRenderer.on(THEME_CHANGE_CHANNEL, this.themeChangeListener)
   }
 
+  componentDidMount() {
+    this.loadCategory(true);
+  }
+
   componentWillUnmount() {
     ipcRenderer.removeListener(THEME_CHANGE_CHANNEL, this.themeChangeListener)
   }
 
-  onClickCategory = () => {
-
+  onClickCategory = (cateId) => {
+    const { currentCateId } = this.state;
+    if (cateId === currentCateId) return;
+    this.setState({ currentCateId: cateId }, () => {
+      this.loadCard(cateId)
+    });
   }
 
   onClickAddCategory = () => {
@@ -60,16 +80,82 @@ export default class Main extends Component {
     this.setState({ open: !open })
   }
 
-  handleClick = event => {
-    this.setState({ anchorEl: event.currentTarget });
+  handleClick = (cateId, event) => {
+    this.setState({ anchorEl: event.currentTarget, currentPopoverCateId: cateId });
   };
 
   handleClose = () => {
     this.setState({ anchorEl: null });
   };
 
+  loadCategory = (reloadCard) => {
+    nedb.category.find({}).sort({ createAt: -1 }).exec((err, docs) => {
+      if (err) return;
+      if (docs.length === 0) {
+        this.setState({ categories: docs, cateOpen: false, currentCateId: '' })
+      } else {
+        const { currentCateId } = this.state;
+        const _currentCateId = currentCateId || docs[0]._id;
+        const state = { categories: docs, cateOpen: false, currentCateId: _currentCateId };
+        this.setState(state, () => {
+          if (reloadCard) { this.loadCard(this.state.currentCateId) }
+        });
+      }
+    })
+  }
+
+  loadCard = (cateId) => {
+    nedb.card.find({ cateId: cateId }).sort({ createAt: -1 }).exec((err, docs) => {
+      if (err) return;
+      this.setState({ cards: docs })
+    })
+  }
+
+  getCateFirstChar = (name) => {
+    if (!name) return '?';
+    return name.charAt(0).toUpperCase();
+  }
+
+  onClickDeleteCate = () => {
+    this.setState({ cateDeleteConfirmOpen: true });
+    this.handleClose();
+  }
+
+  hideConfirmDialog = () => {
+    this.setState({ cateDeleteConfirmOpen: false });
+  }
+
+  handleDeleteCate = () => {
+    this.hideConfirmDialog();
+    const { currentPopoverCateId } = this.state;
+    if (!currentPopoverCateId) {
+      return this.handleClose();
+    };
+    this.removeCate(currentPopoverCateId);
+  }
+
+  resetCurrentCateId = () => {
+    this.setState({ currentCateId: '' }, () => {
+      this.loadCategory(true);
+      this.handleClose();
+    })
+  }
+
+  removeCate = (cateId) => {
+    nedb.category.remove({ _id: cateId }, (err) => {
+      if (err) return;
+      const { currentCateId } = this.state;
+      if (currentCateId === cateId) {
+        this.resetCurrentCateId();
+      } else {
+        this.loadCategory();
+        this.handleClose();
+      }
+    })
+  }
+
   render() {
-    const { themeName, open, cateOpen, anchorEl } = this.state;
+    const { themeName, open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId } = this.state;
     const theme = themes[themeName];
     const popopen = Boolean(anchorEl);
 
@@ -88,12 +174,31 @@ export default class Main extends Component {
           }}
         >
           <MenuItem onClick={this.handleClose}>
-            <Edit className="icon-action" />编辑
+            <Edit className="icon-action" /> Edit
           </MenuItem>
-          <MenuItem onClick={this.handleClose}>
-            <Delete className="icon-action" />删除
+          <MenuItem onClick={this.onClickDeleteCate}>
+            <Delete className="icon-action" /> Remove
           </MenuItem>
         </Menu>
+        <Dialog
+          open={cateDeleteConfirmOpen}
+          keepMounted
+          onClose={this.hideConfirmDialog}
+        >
+          <DialogContent>
+            <DialogContentText id="alert-dialog-slide-description">
+              Are you sure you want to delete me? It will not be restored after deletion!
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.hideConfirmDialog} color="primary">
+              I’m kidding
+            </Button>
+            <Button color="primary" onClick={this.handleDeleteCate} >
+              Don't wanna see you again
+            </Button>
+          </DialogActions>
+        </Dialog>
         <div className={`main-side side-theme-${theme.name}`}>
           <div className="side-top">
             <IconButton className="menu-icon" aria-label="Menu">
@@ -101,38 +206,22 @@ export default class Main extends Component {
             </IconButton>
           </div>
           <div className="side-middle">
-            <div className="cate-group">
-              <div className="pop-action">
-                <MoreHoriz onClick={this.handleClick} />
-              </div>
-              <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory}>
-                <Avatar className="cate-item">H</Avatar>
-              </IconButton>
-            </div>
-            <div className="cate-group">
-              <div className="pop-action">
-                <MoreHoriz onClick={this.handleClick} />
-              </div>
-              <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory}>
-                <Avatar className="cate-item">W</Avatar>
-              </IconButton>
-            </div>
-            <div className="cate-group">
-              <div className="pop-action">
-                <MoreHoriz onClick={this.handleClick} />
-              </div>
-              <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory}>
-                <Avatar className="cate-item">E</Avatar>
-              </IconButton>
-            </div>
-            <div className="cate-group">
-              <div className="pop-action">
-                <MoreHoriz onClick={this.handleClick} />
-              </div>
-              <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory}>
-                <Avatar className="cate-item">C</Avatar>
-              </IconButton>
-            </div>
+            {
+              categories.map((item) => {
+                return (
+                  <div className={classNames("cate-group", {
+                    "active": item._id === currentCateId
+                  })} key={item._id}>
+                    <div className="pop-action">
+                      <MoreHoriz onClick={this.handleClick.bind(this, item._id)} />
+                    </div>
+                    <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickCategory.bind(this, item._id)}>
+                      <Avatar className="cate-item">{this.getCateFirstChar(item.categoryName)}</Avatar>
+                    </IconButton>
+                  </div>
+                );
+              })
+            }
             <div className="cate-group">
               <IconButton className="menu-avatar" aria-label="Menu" onClick={this.onClickAddCategory}>
                 <svg viewBox="0 0 1024 1024" width="46" height="46" className="cate-item-add">
@@ -159,14 +248,21 @@ export default class Main extends Component {
           </div>
         </div>
         <div className="main-center" id="main-center">
-          <Card type="add" onClickAdd={this.onClickAddCard} />
-          <Card onClickIcon={this.onClickAddCard} />
-          <Card onClickIcon={this.onClickAddCard} />
-          <Card onClickIcon={this.onClickAddCard} />
-          <Card onClickIcon={this.onClickAddCard} />
+          {
+            currentCateId ? (
+              <Card type="add" onClickAdd={this.onClickAddCard} />
+            ) : (
+                <div className="empty-tip">You have not added a category, please add it first.</div>
+              )
+          }
+          {
+            cards.map((card) => {
+              return (<Card key={card._id} onClickIcon={this.onClickAddCard} data={card} />)
+            })
+          }
         </div>
         <CardDrawer width={300} open={open} mask={false} onClickMask={this.onClickAddCard} />
-        <CategoryDrawer width={300} open={cateOpen} mask={false} onClickMask={this.onClickAddCategory} />
+        <CategoryDrawer width={300} open={cateOpen} mask={false} onClickMask={this.onClickAddCategory} onChange={this.loadCategory} />
       </div>
     );
   }

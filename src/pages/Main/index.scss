@@ -25,6 +25,7 @@
       .cate-group {
         padding: 7px 0;
         position: relative;
+        transition: all 0.5s;
         &:hover {
           .pop-action {
             visibility: visible;
@@ -146,6 +147,12 @@
     background: url('../../assets/bg.png') no-repeat;
     background-size: contain;
     background-position: center;
+
+    .empty-tip {
+      text-align: center;
+      margin-top: 260px;
+      color: #8898AA;
+    }
   }
 }
 
