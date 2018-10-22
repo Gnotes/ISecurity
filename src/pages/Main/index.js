@@ -42,6 +42,8 @@ export default class Main extends Component {
       categories: [],
       cards: [],
       currentCateId: '',
+      currentPopoverCateId: '',
+      cateAction: '',
     }
     this.addThemeChangeListener();
   }
@@ -72,7 +74,7 @@ export default class Main extends Component {
 
   onClickAddCategory = () => {
     const { cateOpen } = this.state;
-    this.setState({ cateOpen: !cateOpen })
+    this.setState({ cateOpen: !cateOpen, cateAction: 'add' })
   }
 
   onClickAddCard = () => {
@@ -121,6 +123,11 @@ export default class Main extends Component {
     this.handleClose();
   }
 
+  onClickEditCate = () => {
+    this.setState({ cateOpen: true, cateAction: 'edit' });
+    this.handleClose();
+  }
+
   hideConfirmDialog = () => {
     this.setState({ cateDeleteConfirmOpen: false });
   }
@@ -155,7 +162,7 @@ export default class Main extends Component {
   }
 
   render() {
-    const { themeName, open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId } = this.state;
+    const { themeName, open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId, currentPopoverCateId, cateAction } = this.state;
     const theme = themes[themeName];
     const popopen = Boolean(anchorEl);
 
@@ -173,7 +180,7 @@ export default class Main extends Component {
             },
           }}
         >
-          <MenuItem onClick={this.handleClose}>
+          <MenuItem onClick={this.onClickEditCate}>
             <Edit className="icon-action" /> Edit
           </MenuItem>
           <MenuItem onClick={this.onClickDeleteCate}>
@@ -262,7 +269,7 @@ export default class Main extends Component {
           }
         </div>
         <CardDrawer width={300} open={open} mask={false} onClickMask={this.onClickAddCard} />
-        <CategoryDrawer width={300} open={cateOpen} mask={false} onClickMask={this.onClickAddCategory} onChange={this.loadCategory} />
+        <CategoryDrawer action={cateAction} currentCateId={currentPopoverCateId} width={300} open={cateOpen} mask={false} onClickMask={this.onClickAddCategory} onChange={this.loadCategory} />
       </div>
     );
   }

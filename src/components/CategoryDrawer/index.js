@@ -16,6 +16,23 @@ class CategoryDrawer extends Component {
     }
   }
 
+  loadCate = (cateId) => {
+    nedb.category.find({ _id: cateId }, (err, docs) => {
+      if (err || docs.length === 0) return;
+      const { categoryName, comments } = docs[0];
+      this.setState({ categoryName, comments })
+    })
+  }
+
+  //WARNING! To be deprecated in React v17. Use new lifecycle static getDerivedStateFromProps instead.
+  componentWillReceiveProps(nextProps) {
+    const { open, currentCateId, action } = nextProps;
+    if (open && currentCateId) {
+      if (action === 'edit') this.loadCate(currentCateId);
+      else this.clearState();
+    }
+  }
+
   handleChange = (field, event) => {
     this.setState({ [field]: event.target.value });
   };
@@ -42,6 +59,17 @@ class CategoryDrawer extends Component {
     })
   }
 
+  updateCategory = () => {
+    const { categoryName, comments } = this.state;
+    const { onChange, currentCateId } = this.props;
+    this.setState({ loading: true })
+    nedb.category.update({ _id: currentCateId }, { $set: { categoryName: categoryName, comments: comments, updateAt: Date.now() } }, {}, (err, numAffected, affectedDocuments, upsert) => {
+      if (err) { return this.showErrorNotify(err.message) };
+      this.clearState()
+      onChange();
+    })
+  }
+
   clearState = () => {
     this.setState({ categoryName: '', comments: '', loading: false })
   }
@@ -49,8 +77,11 @@ class CategoryDrawer extends Component {
   onSubmit = (e) => {
     e.preventDefault(); e.stopPropagation();
     const { categoryName } = this.state;
+    const { action } = this.props;
+    if (!action) return;
     if (!categoryName || !categoryName.trim()) return this.showErrorNotify();
-    this.createCategory();
+    if (action === 'add') this.createCategory();
+    else this.updateCategory();
   }
 
   render() {
@@ -95,7 +126,9 @@ class CategoryDrawer extends Component {
 
 CategoryDrawer.propTypes = {
   onClickMask: PropTypes.func,
+  currentCateId: PropTypes.string,
   onChange: PropTypes.func,
+  action: PropTypes.oneOf(['add', 'edit', ''])
 }
 
 CategoryDrawer.defaultProps = {
