@@ -3,6 +3,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Avatar from '@material-ui/core/Avatar';
 import CardDrawer from '../../components/CardDrawer';
+import CategoryDrawer from '../../components/CategoryDrawer';
 import Card from '../../components/Card';
 import './index.scss';
 import themes from '../../theme';
@@ -20,6 +21,7 @@ export default class Main extends Component {
       loading: false,
       checked: false,
       open: false,
+      cateOpen: false,
       password: '',
     }
     this.addThemeChangeListener();
@@ -42,7 +44,8 @@ export default class Main extends Component {
   }
 
   onClickAddCategory = () => {
-
+    const { cateOpen } = this.state;
+    this.setState({ cateOpen: !cateOpen })
   }
 
   onClickAddCard = () => {
@@ -51,7 +54,7 @@ export default class Main extends Component {
   }
 
   render() {
-    const { themeName, open } = this.state;
+    const { themeName, open, cateOpen } = this.state;
     const theme = themes[themeName];
 
     return (
@@ -115,9 +118,8 @@ export default class Main extends Component {
           <Card onClickIcon={this.onClickAddCard} />
           <Card onClickIcon={this.onClickAddCard} />
         </div>
-        <CardDrawer width={300} open={open} mask={false} onClickMask={this.onClickAddCard}>
-          <h1 onClick={this.onClickAddCategory}>CardDrawer</h1>
-        </CardDrawer>
+        <CardDrawer width={300} open={open} mask={false} onClickMask={this.onClickAddCard} />
+        <CategoryDrawer width={300} open={cateOpen} mask={false} onClickMask={this.onClickAddCategory} />
       </div>
     );
   }
