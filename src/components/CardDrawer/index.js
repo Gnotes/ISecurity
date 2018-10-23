@@ -16,7 +16,7 @@ import { TwitterPicker } from 'react-color';
 import Drawer from '../Drawer';
 import './index.scss';
 
-const nedb = require('../../tools/nedb');
+const nedb = require('../../nedb');
 const { shell } = window.require('electron');
 
 class CardDrawer extends Component {

@@ -31,6 +31,13 @@ yarn dev
   <img alt="app-main-light-add-card" src="./app-main-light-add-card.png" width="300" style="display:inline-block;"/>
 </div>
 
+#### 3. Build
+
+```bash
+yan dist
+# npm run dist
+```
+
 ## The problems that I have encountered
 
 - [Check Problems](./problems.md)

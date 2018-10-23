@@ -4,7 +4,7 @@ import Input from '@material-ui/core/Input';
 import Backup from '@material-ui/icons/Backup';
 import Drawer from '../Drawer';
 import './index.scss';
-const nedb = require('../../tools/nedb');
+const nedb = require('../../nedb');
 
 class CategoryDrawer extends Component {
   constructor(props) {

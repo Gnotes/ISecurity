@@ -11,7 +11,7 @@ import themes from '../../theme';
 
 const settings = window.require('electron-settings');
 const { ipcRenderer } = window.require('electron');
-const nedb = require('../../tools/nedb');
+const nedb = require('../../nedb');
 
 const USER_ID = 'i_security';
 const THEME_CHANGE_CHANNEL = 'asynchronous-theme';

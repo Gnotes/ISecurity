@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { BrowserRouter as Router } from "react-router-dom";
+import { HashRouter as Router } from "react-router-dom";
 import { Switch, Route } from 'react-router'
 import Login from './pages/Login';
 import Privacy from './pages/Privacy';

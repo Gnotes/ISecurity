@@ -19,7 +19,7 @@ import CategoryDrawer from '../../components/CategoryDrawer';
 import Card from '../../components/Card';
 import './index.scss';
 
-const nedb = require('../../tools/nedb');
+const nedb = require('../../nedb');
 const { ipcRenderer, shell } = window.require('electron');
 
 export default class Main extends Component {

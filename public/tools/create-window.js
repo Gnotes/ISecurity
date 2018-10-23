@@ -1,5 +1,7 @@
 const { BrowserWindow } = require('electron');
 const WManager = require('./window-manager')();
+const paths = require('./paths');
+const IS_DEV = process.env.NODE_ENV === 'development';
 let mainWindow = null, privacyWindow = null;
 
 module.exports = {
@@ -32,8 +34,12 @@ module.exports = {
         })
       })
     }
-    // 然后加载应用的远程资源URL。
-    mainWindow.loadURL('http://localhost:3000/main');
+    if (IS_DEV) {
+      // 然后加载应用的远程资源URL。
+      mainWindow.loadURL('http://localhost:3000/#main');
+    } else {
+      mainWindow.loadURL(`file://${paths.ROOT_PATH}/build/index.html#main`)
+    }
 
   },
   createPrivacyWindow: () => {
@@ -56,7 +62,11 @@ module.exports = {
         })
       })
     }
-    // 然后加载应用的远程资源URL。
-    privacyWindow.loadURL('http://localhost:3000/privacy');
+    if (IS_DEV) {
+      // 然后加载应用的远程资源URL。
+      privacyWindow.loadURL('http://localhost:3000/#privacy');
+    } else {
+      privacyWindow.loadURL(`file://${paths.ROOT_PATH}/build/index.html#privacy`)
+    }
   }
 }
