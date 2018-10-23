@@ -18,6 +18,13 @@ yarn dev
 # npm run dev 
 ```
 
+## Build
+
+```bash
+yarn dist
+# npm run dist
+```
+
 > ⚠️ we will have to specify the build property, this is because of a minor conflict between create-react-app and electron-builder as both are using the build folder for two different purposes.  
 >   
 > In order to solve this conflict, we need to manually configure electron-builder’s correct folders for the build step. Add the following build section to the package.json file:  
@@ -51,13 +58,6 @@ yarn dev
   <img alt="app-main-light" src="./app-main-light.png" width="300" style="display:inline-block;"/>
   <img alt="app-main-light-add-card" src="./app-main-light-add-card.png" width="300" style="display:inline-block;"/>
 </div>
-
-#### 3. Build
-
-```bash
-yan dist
-# npm run dist
-```
 
 ## The problems that I have encountered
 
