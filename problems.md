@@ -7,6 +7,4 @@
 
 > 3. Unable to find **nedb** Generated database file `*.db` [Check Answer](https://github.com/louischatriot/nedb#browser-version)
 
-<div align="center">
-  <img alt="nedb" src="./nedb.png" width="300" style="display:inline-block;"/>
-</div>
+<img alt="nedb" src="./nedb.png" width="300" style="display:inline-block;"/>
