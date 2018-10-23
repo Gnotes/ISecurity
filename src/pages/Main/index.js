@@ -83,7 +83,7 @@ export default class Main extends Component {
     nedb.category.find({}).sort({ createAt: -1 }).exec((err, docs) => {
       if (err) return;
       if (docs.length === 0) {
-        this.setState({ categories: docs, cateOpen: false, currentCateId: '' })
+        this.setState({ categories: docs, cards: [], cateOpen: false, currentCateId: '' })
       } else {
         const { currentCateId } = this.state;
         const _currentCateId = currentCateId || docs[0]._id;
