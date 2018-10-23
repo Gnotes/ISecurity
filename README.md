@@ -46,6 +46,8 @@ yarn dist
 
 - [Reference](http://kazuar.github.io/markdown-app/)
 
+## Screen captures
+
 <div align="center">
   <img alt="iSecurity" src="./app.png" width="300" style="display:inline-block;"/>
   <img alt="iSecurity" src="./app-gradient.png" width="300" style="display:inline-block;"/>
