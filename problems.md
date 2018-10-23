@@ -4,3 +4,5 @@
 
 > 2. Error: Application entry file "build/electron.js" in the "xxx/Contents/Resources/app.asar"  
 > **Answer** : Rename `main.js` to `electron.js` and move to `public` directory.
+
+> 3. ⚠️ Unable to find **nedb** Generated database file `*. db`
