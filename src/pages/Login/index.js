@@ -94,7 +94,6 @@ class Login extends Component {
     const { checked } = this.state;
     nedb.user.update({ _id: USER_ID }, { $set: { checked: checked } }, {}, (err, numAffected, affectedDocuments, upsert) => {
       if (err) { return console.log(err) };
-      console.log(err, numAffected, affectedDocuments, upsert)
     })
   }
 

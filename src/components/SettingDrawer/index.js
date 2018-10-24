@@ -14,6 +14,30 @@ import Drawer from '../Drawer';
 import './index.scss';
 const nedb = require('../../nedb');
 const { ipcRenderer } = window.require('electron');
+const settings = window.require('electron-settings');
+
+const fillZero = (num) => {
+  if (num < 9 && num > 0) return `0${num}`;
+  return num;
+}
+
+const getTime = (ts) => {
+  const now = Date.now();
+  const diffSec = parseInt((now - ts) / 1000);
+  let days = 0, hours = 0;
+
+  if (diffSec > 86400) {
+    days = parseInt(diffSec / 86400);
+    const daysSec = days * 86400;
+    const hoursSec = diffSec - daysSec;
+    if (hoursSec > 3600) {
+      hours = parseInt(hoursSec / 3600);
+    }
+  } else if (diffSec > 3600) {
+    hours = parseInt(diffSec / 3600);
+  }
+  return { days, hours }
+}
 
 class SettingDrawer extends Component {
   constructor(props) {
@@ -22,7 +46,21 @@ class SettingDrawer extends Component {
       loading: false,
       clearOpen: false,
       resetOpen: false,
+      days: 0,
+      hours: 0,
     }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.open) {
+      this.setTime();
+    }
+  }
+
+  setTime = () => {
+    const createAt = settings.get('createAt');
+    const time = getTime(createAt);
+    this.setState(time);
   }
 
   showErrorNotify = (errMsg) => {
@@ -85,7 +123,7 @@ class SettingDrawer extends Component {
 
   render() {
     const { open, onClickMask } = this.props;
-    const { resetOpen, clearOpen } = this.state;
+    const { resetOpen, clearOpen, days, hours } = this.state;
     return (
       <Drawer width={300} open={open} onClickMask={onClickMask}>
         <Dialog
@@ -130,9 +168,9 @@ class SettingDrawer extends Component {
           </header>
           <div className="time-using">
             <div className="time-text">TIME&nbsp;&nbsp;OF&nbsp;&nbsp;USING</div>
-            <span className="time"><span className="time-value">2 </span><span className="value-text">days</span></span>
+            <span className="time"><span className="time-value">{fillZero(days)} </span><span className="value-text">days</span></span>
             <span className="time time-hour">
-              <span className="time-value">02 </span><span className="value-text">hours</span>
+              <span className="time-value">{fillZero(hours)} </span><span className="value-text">hours</span>
             </span>
           </div>
           <div className="sepetor"></div>

@@ -39,6 +39,10 @@ async function createWindow() {
     if (!settings.has('theme')) {
         settings.set('theme', 'light');
     }
+    if (!settings.has('createAt')) {
+        settings.set('createAt', Date.now());
+    }
+
     if (IS_DEV) {
         await installExtensions();
     }
