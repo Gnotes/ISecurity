@@ -31,7 +31,7 @@ export default class Main extends Component {
       checked: false,
       open: false,
       cateOpen: false,
-      settingOpen: true,
+      settingOpen: false,
       cateDeleteConfirmOpen: false,
       password: '',
       anchorEl: null,
@@ -161,13 +161,18 @@ export default class Main extends Component {
     shell.openExternal('https://github.com/Gnotes/ISecurity');
   }
 
-  onToggleSetting = () => {
-    const { settingOpen } = this.state;
-    this.setState({ settingOpen: !settingOpen });
+  showSetting = () => {
+    this.setState({ settingOpen: true });
   }
 
-  onSettingChange = () => {
+  onHideSetting = () => {
+    this.setState({ settingOpen: false });
+  }
 
+  onCleanup = () => {
+    this.setState({ settingOpen: false }, () => {
+      this.loadCategory(true)
+    })
   }
 
   render() {
@@ -215,7 +220,7 @@ export default class Main extends Component {
         </Dialog>
         <div className="main-side side-theme-light">
           <div className="side-top">
-            <IconButton className="menu-icon" aria-label="Menu" onClick={this.onToggleSetting}>
+            <IconButton className="menu-icon" aria-label="Menu" onClick={this.showSetting}>
               <MenuIcon />
             </IconButton>
           </div>
@@ -277,7 +282,7 @@ export default class Main extends Component {
         </div>
         <CardDrawer action={cardAction} cardId={currentCardId} currentCateId={currentCateId} width={300} open={open} mask={false} onClickMask={this.onClickAddCard} onChange={this.reloadCard} />
         <CategoryDrawer action={cateAction} currentCateId={currentPopoverCateId} width={300} open={cateOpen} mask={false} onClickMask={this.onClickAddCategory} onChange={this.loadCategory} />
-        <SettingDrawer width={300} open={settingOpen} mask={false} onClickMask={this.onToggleSetting} onChange={this.onSettingChange} />
+        <SettingDrawer width={300} open={settingOpen} mask={false} onClickMask={this.onHideSetting} onChange={this.onCleanup} />
       </div>
     );
   }

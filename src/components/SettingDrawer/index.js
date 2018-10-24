@@ -62,12 +62,25 @@ class SettingDrawer extends Component {
   }
 
   handleClear = () => {
-    nedb.category.remove({}, (err) => {
+    nedb.category.remove({}, { multi: true }, (err) => {
       if (err) { return this.showErrorNotify(err.message) };
-      nedb.card.remove({}, (_err) => {
+      nedb.card.remove({}, { multi: true }, (_err) => {
         if (_err) { return this.showErrorNotify(_err.message) };
+        this.setState({ clearOpen: false }, () => {
+          this.clearTimer();
+          this.timer = setTimeout(this.props.onChange, 500);
+        })
       })
     })
+  }
+
+  componentWillUnmount() {
+    this.clearTimer();
+  }
+
+  clearTimer = () => {
+    this.timer && clearTimeout(this.timer);
+    this.timer = null;
   }
 
   render() {
