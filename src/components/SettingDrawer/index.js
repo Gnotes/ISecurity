@@ -20,6 +20,8 @@ class SettingDrawer extends Component {
     super(props);
     this.state = {
       loading: false,
+      clearOpen: false,
+      resetOpen: false,
     }
   }
 
@@ -51,10 +53,8 @@ class SettingDrawer extends Component {
   }
 
   handleReset = () => {
-    nedb.user.remove({}, (err) => {
-      if (err) { return this.showErrorNotify(err.message) };
-
-    })
+    // 在这里先删除数据，再回到login窗口时，会发生数据仍然存在的问题，因此在login窗口处理删除事件
+    ipcRenderer.send('on-password-reset');
   }
 
   hideClear = () => {

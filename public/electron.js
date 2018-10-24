@@ -154,3 +154,10 @@ ipcMain.on('on-lock-main-window', (e) => {
         mainWindow.close();
     }
 })
+
+ipcMain.on('on-password-reset', (e) => {
+    const mainWindow = WManager.getWindow('MAIN_WINDOW');
+    if (mainWindow) { mainWindow.close(); }
+    const loginWindow = WManager.getWindow('LOGIN_WINDOW');
+    if (loginWindow) { loginWindow.webContents.send('password-reset') }
+})

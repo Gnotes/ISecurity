@@ -16,6 +16,7 @@ const nedb = require('../../nedb');
 const USER_ID = 'i_security';
 const THEME_CHANGE_CHANNEL = 'asynchronous-theme';
 const MAIN_WINDOW_SHOW_CHANNEL = 'on-main-window-show';
+const PASSWORD_RESET_CHANNEL = 'password-reset';
 
 class Login extends Component {
 
@@ -30,6 +31,7 @@ class Login extends Component {
     }
     this.addThemeChangeListener();
     this.addMainWindowShowListener();
+    this.addPasswordResetListener();
   }
 
   themeChangeListener = (event, theme) => {
@@ -38,6 +40,17 @@ class Login extends Component {
 
   addThemeChangeListener = () => {
     ipcRenderer.on(THEME_CHANGE_CHANNEL, this.themeChangeListener)
+  }
+
+  addPasswordResetListener = () => {
+    ipcRenderer.on(PASSWORD_RESET_CHANNEL, this.passwordResetListener)
+  }
+
+  passwordResetListener = () => {
+    nedb.user.remove({}, { multi: true }, (err) => {
+      if (err) { return this.showErrorNotify(err.message) };
+      this.setState({ loading: false, password: '', checked: false });
+    })
   }
 
   mainWindowShowListener = () => {
@@ -56,6 +69,7 @@ class Login extends Component {
   componentWillUnmount() {
     ipcRenderer.removeListener(THEME_CHANGE_CHANNEL, this.themeChangeListener)
     ipcRenderer.removeListener(MAIN_WINDOW_SHOW_CHANNEL, this.mainWindowShowListener)
+    ipcRenderer.removeListener(PASSWORD_RESET_CHANNEL, this.passwordResetListener)
   }
 
   initialUserValue = () => {
@@ -71,9 +85,8 @@ class Login extends Component {
 
   createUser = () => {
     const { password, checked } = this.state;
-    nedb.user.insert({ _id: USER_ID, checked: checked, password: password }, (err, newDoc) => {
+    nedb.user.insert({ _id: USER_ID, checked: checked, password: password }, (err) => {
       if (err) { return console.log(err) };
-      console.log(newDoc)
     })
   }
 
@@ -106,13 +119,13 @@ class Login extends Component {
     this.setState({ checked: event.target.checked });
   }
 
-  showErrorNotify = () => {
+  showErrorNotify = (errMsg) => {
     /**
      * 使用 HTML-API Notification 模块
      * https://w3c-html-ig-zh.github.io/notifications/whatwg/
      */
     new Notification('Warm Tips', {
-      body: 'Please enter a valid password.',
+      body: errMsg || 'Please enter a valid password.',
       silent: false
     })
   }
