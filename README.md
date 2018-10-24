@@ -58,6 +58,7 @@ yarn dist
 </div>
 <div align="center">
   <img alt="app-main-light" src="./app-main-light.png" width="300" style="display:inline-block;"/>
+  <img alt="app-setting" src="./app-setting.png" width="300" style="display:inline-block;"/>
   <img alt="app-main-light-add-card" src="./app-main-light-add-card.png" width="300" style="display:inline-block;"/>
 </div>
 
