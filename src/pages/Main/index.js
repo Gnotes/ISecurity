@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import classNames from 'classnames';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import LockOpen from '@material-ui/icons/LockOpen';
+import MenuIcon from '@material-ui/icons/Menu';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import Edit from '@material-ui/icons/Edit';
 import Delete from '@material-ui/icons/Delete';
@@ -16,11 +16,12 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 
 import CardDrawer from '../../components/CardDrawer';
 import CategoryDrawer from '../../components/CategoryDrawer';
+import SettingDrawer from '../../components/SettingDrawer';
 import Card from '../../components/Card';
 import './index.scss';
 
 const nedb = require('../../nedb');
-const { ipcRenderer, shell } = window.require('electron');
+const { shell } = window.require('electron');
 
 export default class Main extends Component {
   constructor(props) {
@@ -30,7 +31,7 @@ export default class Main extends Component {
       checked: false,
       open: false,
       cateOpen: false,
-      Popopen: false,
+      settingOpen: true,
       cateDeleteConfirmOpen: false,
       password: '',
       anchorEl: null,
@@ -160,12 +161,17 @@ export default class Main extends Component {
     shell.openExternal('https://github.com/Gnotes/ISecurity');
   }
 
-  onClickLock = () => {
-    ipcRenderer.send('on-lock-main-window');
+  onToggleSetting = () => {
+    const { settingOpen } = this.state;
+    this.setState({ settingOpen: !settingOpen });
+  }
+
+  onSettingChange = () => {
+
   }
 
   render() {
-    const { open, cateOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId, currentCardId, currentPopoverCateId, cateAction, cardAction } = this.state;
+    const { open, cateOpen, settingOpen, cateDeleteConfirmOpen, anchorEl, categories, cards, currentCateId, currentCardId, currentPopoverCateId, cateAction, cardAction } = this.state;
     const popopen = Boolean(anchorEl);
 
     return (
@@ -209,8 +215,8 @@ export default class Main extends Component {
         </Dialog>
         <div className="main-side side-theme-light">
           <div className="side-top">
-            <IconButton className="menu-icon" aria-label="Menu" onClick={this.onClickLock}>
-              <LockOpen />
+            <IconButton className="menu-icon" aria-label="Menu" onClick={this.onToggleSetting}>
+              <MenuIcon />
             </IconButton>
           </div>
           <div className="side-middle">
@@ -271,6 +277,7 @@ export default class Main extends Component {
         </div>
         <CardDrawer action={cardAction} cardId={currentCardId} currentCateId={currentCateId} width={300} open={open} mask={false} onClickMask={this.onClickAddCard} onChange={this.reloadCard} />
         <CategoryDrawer action={cateAction} currentCateId={currentPopoverCateId} width={300} open={cateOpen} mask={false} onClickMask={this.onClickAddCategory} onChange={this.loadCategory} />
+        <SettingDrawer width={300} open={settingOpen} mask={false} onClickMask={this.onToggleSetting} onChange={this.onSettingChange} />
       </div>
     );
   }
