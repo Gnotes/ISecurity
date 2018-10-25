@@ -148,7 +148,7 @@ class CardDrawer extends Component {
   }
 
   render() {
-    const { open, onClickMask } = this.props;
+    const { open, onClickMask, action } = this.props;
     const { accountType, accoutNumber, password, websiteAddress, email, others, comments, mark, showPassword, showColorPicker, deleteConfirmOpen } = this.state;
     return (
       <Drawer width={300} open={open} onClickMask={onClickMask}>
@@ -172,7 +172,7 @@ class CardDrawer extends Component {
         </Dialog>
         <div className="drawer-action">
           <Backup className="action-item" onClick={this.onSubmit} />
-          <Delete className="action-item" onClick={this.onRemove} />
+          {action === 'edit' && <Delete className="action-item" onClick={this.onRemove} />}
         </div>
         <div className="card-form">
           <form onSubmit={this.onSubmit}>
