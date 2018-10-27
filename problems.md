@@ -15,3 +15,5 @@ as we cannot get `child-window instance which created in render process` from `m
 
 > 5. How to render different windows with only one `index.html` and react-router?  
 > **Answer** : Every window has a method named `loadURL` or `loadFile`, and each window needs a `*.html` to load in **production**. but we have one and only `index.html` file. So, we need to do is changing router from `BrowserRouter` to `HashRouter`, for example `win.loadURL('file://xxx/index.html#some-router')`
+
+> 6. Cannot copy and paste in electron. [Check Answer](https://pracucci.com/atom-electron-enable-copy-and-paste.html)
